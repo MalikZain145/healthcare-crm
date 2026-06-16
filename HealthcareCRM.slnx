@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="HealthcareCRM.API/HealthcareCRM.API.csproj" />
-  <Project Path="HealthcareCRM.Web/HealthcareCRM.Web.csproj" />
-</Solution>
