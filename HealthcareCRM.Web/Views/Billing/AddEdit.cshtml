@@ -1,0 +1,63 @@
+@model InvoiceViewModel
+@{
+    var isEdit = Model.Id != 0;
+    ViewData["Title"] = isEdit ? "Edit Invoice" : "New Invoice";
+    var patients = ViewBag.Patients as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+}
+
+<div class="page-head">
+    <div><h2>@(isEdit ? "Edit Invoice" : "New Invoice")</h2></div>
+    <a asp-action="Index" class="btn btn-secondary">← Back to list</a>
+</div>
+
+<div class="card form-card">
+    <div class="card-head"><h3>Invoice details</h3></div>
+    <div class="form-body">
+        <form asp-action="AddEdit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="alert-box error"></div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="PatientId" class="form-label"></label>
+                    <select asp-for="PatientId" asp-items="patients" class="form-select">
+                        <option value="">Select patient</option>
+                    </select>
+                    <span asp-validation-for="PatientId" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="form-label">Amount (Rs)</label>
+                    <input asp-for="Amount" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="Amount" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IssuedDate" class="form-label"></label>
+                    <input asp-for="IssuedDate" type="date" class="form-control" />
+                    <span asp-validation-for="IssuedDate" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Unpaid">Unpaid</option>
+                        <option value="Paid">Paid</option>
+                    </select>
+                    <span asp-validation-for="Status" class="field-error"></span>
+                </div>
+                <div class="form-group full">
+                    <label asp-for="Description" class="form-label"></label>
+                    <input asp-for="Description" class="form-control" placeholder="e.g. Consultation fee" />
+                    <span asp-validation-for="Description" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">@(isEdit ? "Save changes" : "Create invoice")</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

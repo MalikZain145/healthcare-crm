@@ -1,0 +1,105 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-ico teal">☺</div>
+        <div class="stat-value">@Model.TotalPatients</div>
+        <div class="stat-label">@(isAdmin ? "Total Patients" : "My Patients")</div>
+    </div>
+    @if (isAdmin)
+    {
+        <div class="stat-card">
+            <div class="stat-ico navy">✦</div>
+            <div class="stat-value">@Model.TotalDoctors</div>
+            <div class="stat-label">Doctors</div>
+        </div>
+    }
+    <div class="stat-card">
+        <div class="stat-ico amber">▤</div>
+        <div class="stat-value">@Model.TodaysAppointments</div>
+        <div class="stat-label">Today's Appointments</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-ico navy">▦</div>
+        <div class="stat-value">@Model.TotalAppointments</div>
+        <div class="stat-label">@(isAdmin ? "All Appointments" : "My Appointments")</div>
+    </div>
+    @if (isAdmin)
+    {
+        <div class="stat-card">
+            <div class="stat-ico green">₨</div>
+            <div class="stat-value">@Model.TotalRevenue.ToString("N0")</div>
+            <div class="stat-label">Revenue (Paid)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-ico amber">₨</div>
+            <div class="stat-value">@Model.OutstandingAmount.ToString("N0")</div>
+            <div class="stat-label">Outstanding (Unpaid)</div>
+        </div>
+    }
+</div>
+
+<div class="dash-cols">
+    <div class="panel">
+        <div class="panel-head">
+            Upcoming Appointments
+            <a asp-controller="Appointments" asp-action="Index">View all</a>
+        </div>
+        <div class="panel-body">
+            @if (Model.UpcomingAppointments.Any())
+            {
+                @foreach (var a in Model.UpcomingAppointments)
+                {
+                    <div class="list-row">
+                        <div class="list-avatar">@a.AppointmentDate.ToString("dd")</div>
+                        <div class="list-main">
+                            <div class="list-title">@(a.Patient?.FullName ?? "Patient")</div>
+                            <div class="list-sub">@(a.Doctor?.FullName ?? "Doctor") · @a.AppointmentDate.ToString("MMM dd, h:mm tt")</div>
+                        </div>
+                        <span class="badge-pill b-blue">@a.Status</span>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state" style="padding:34px 20px;">
+                    <div class="empty-ico">▤</div>
+                    <p style="margin-top:8px;">No upcoming appointments.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            Recent Patients
+            <a asp-controller="Patients" asp-action="Index">View all</a>
+        </div>
+        <div class="panel-body">
+            @if (Model.RecentPatients.Any())
+            {
+                @foreach (var p in Model.RecentPatients)
+                {
+                    <div class="list-row">
+                        <div class="list-avatar">@(string.IsNullOrEmpty(p.FirstName) ? "?" : p.FirstName[0].ToString())</div>
+                        <div class="list-main">
+                            <div class="list-title">@p.FullName</div>
+                            <div class="list-sub">@p.Email</div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state" style="padding:34px 20px;">
+                    <div class="empty-ico">☺</div>
+                    <p style="margin-top:8px;">No patients yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

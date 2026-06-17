@@ -1,0 +1,81 @@
+@model List<Appointment>
+@{
+    ViewData["Title"] = "Appointments";
+    var search = ViewBag.Search as string;
+    var status = ViewBag.Status as string;
+    string Sel(string s) => s == status ? "selected" : "";
+    string Badge(string st) => st == "Completed" ? "b-green" : st == "Cancelled" ? "b-red" : "b-blue";
+}
+
+<div class="page-head">
+    <div>
+        <h2>Appointments</h2>
+        <div class="sub">@Model.Count appointment(s)</div>
+    </div>
+    <a asp-action="AddEdit" class="btn btn-primary">+ Book Appointment</a>
+</div>
+
+<form asp-action="Index" method="get" class="toolbar">
+    <div class="search-group">
+        <input type="text" name="search" value="@search" placeholder="Search patient, doctor or reason..." />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    <select name="status" class="filter-select" onchange="this.form.submit()">
+        <option value="">All status</option>
+        <option value="Scheduled" selected="@(status == "Scheduled")">Scheduled</option>
+        <option value="Completed" selected="@(status == "Completed")">Completed</option>
+        <option value="Cancelled" selected="@(status == "Cancelled")">Cancelled</option>
+    </select>
+    @if (!string.IsNullOrEmpty(search) || !string.IsNullOrEmpty(status))
+    {
+        <a asp-action="Index" class="btn btn-secondary">Clear</a>
+    }
+</form>
+
+<div class="table-card">
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date &amp; Time</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@(a.Patient?.FullName ?? "—")</td>
+                        <td>@(a.Doctor?.FullName ?? "—")</td>
+                        <td>@a.AppointmentDate.ToString("MMM dd, yyyy · h:mm tt")</td>
+                        <td>@(string.IsNullOrEmpty(a.Reason) ? "—" : a.Reason)</td>
+                        <td><span class="badge-pill @Badge(a.Status)">@a.Status</span></td>
+                        <td style="text-align:right;">
+                            <div class="action-group">
+                                <a asp-action="AddEdit" asp-route-id="@a.Id" class="btn btn-outline btn-sm">Edit</a>
+                                <form asp-action="Delete" asp-route-id="@a.Id" method="post"
+                                      onsubmit="return confirm('Delete this appointment?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-ico">▤</div>
+            <h4>No appointments found</h4>
+            <p>Book an appointment to see it listed here.</p>
+            <a asp-action="AddEdit" class="btn btn-primary">+ Book Appointment</a>
+        </div>
+    }
+</div>

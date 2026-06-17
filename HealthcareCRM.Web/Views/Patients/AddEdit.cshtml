@@ -1,0 +1,87 @@
+@model PatientViewModel
+@{
+    var isEdit = Model.Id != 0;
+    ViewData["Title"] = isEdit ? "Edit Patient" : "Add Patient";
+}
+
+<div class="page-head">
+    <div><h2>@(isEdit ? "Edit Patient" : "Add Patient")</h2></div>
+    <a asp-action="Index" class="btn btn-secondary">← Back to list</a>
+</div>
+
+<div class="card form-card">
+    <div class="card-head"><h3>Patient details</h3></div>
+    <div class="form-body">
+        <form asp-action="AddEdit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="alert-box error"></div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" />
+                    <span asp-validation-for="DateOfBirth" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gender" class="form-label"></label>
+                    <select asp-for="Gender" class="form-select">
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BloodType" class="form-label"></label>
+                    <select asp-for="BloodType" class="form-select">
+                        <option value="">Select blood type</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                    <span asp-validation-for="BloodType" class="field-error"></span>
+                </div>
+                <div class="form-group full">
+                    <label asp-for="Address" class="form-label"></label>
+                    <textarea asp-for="Address" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="Address" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">@(isEdit ? "Save changes" : "Add patient")</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

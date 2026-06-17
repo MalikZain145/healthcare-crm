@@ -1,0 +1,46 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Create account";
+    Layout = "_AuthLayout";
+}
+
+<h2>Create your account</h2>
+<p class="subtitle">Get started with HealthCare CRM.</p>
+
+<form asp-action="Register" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert-box error" role="alert"></div>
+
+    <div class="form-group">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" placeholder="Dr. Ahmed Khan" autofocus />
+        <span asp-validation-for="FullName" class="field-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" placeholder="you@clinic.com" />
+        <span asp-validation-for="Email" class="field-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" placeholder="At least 6 characters" />
+        <span asp-validation-for="Password" class="field-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" class="form-control" placeholder="Re-enter password" />
+        <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create account</button>
+</form>
+
+<div class="auth-foot">
+    Already have an account? <a asp-action="Login">Sign in</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

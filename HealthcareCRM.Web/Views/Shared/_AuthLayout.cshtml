@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · HealthCare CRM</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="auth-body">
+    <div class="auth-wrap">
+        <!-- Left brand panel -->
+        <div class="auth-left">
+            <div class="auth-brand">
+                <span class="brand-logo big">✚</span>
+                <h1>HealthCare CRM</h1>
+                <p>Patient &amp; practice management, all in one place.</p>
+            </div>
+            <ul class="auth-features">
+                <li><span>◉</span> Comprehensive patient records</li>
+                <li><span>◉</span> Smart appointment scheduling</li>
+                <li><span>◉</span> Integrated billing &amp; invoicing</li>
+                <li><span>◉</span> Real-time analytics &amp; reports</li>
+            </ul>
+        </div>
+        <!-- Right form panel -->
+        <div class="auth-right">
+            <div class="auth-card">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

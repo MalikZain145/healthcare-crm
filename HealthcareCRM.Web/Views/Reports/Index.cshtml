@@ -1,0 +1,98 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Reports";
+    int scheduled = ViewBag.Scheduled ?? 0;
+    int completed = ViewBag.Completed ?? 0;
+    int cancelled = ViewBag.Cancelled ?? 0;
+    int paid = ViewBag.PaidCount ?? 0;
+    int unpaid = ViewBag.UnpaidCount ?? 0;
+    int apptTotal = scheduled + completed + cancelled;
+    int invTotal = paid + unpaid;
+    decimal total = Model.TotalRevenue + Model.OutstandingAmount;
+    int Pct(int part, int whole) => whole == 0 ? 0 : (int)Math.Round(part * 100.0 / whole);
+}
+
+<div class="page-head">
+    <div>
+        <h2>Reports &amp; Analytics</h2>
+        <div class="sub">Overview of clinic activity</div>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-ico teal">☺</div>
+        <div class="stat-value">@Model.TotalPatients</div>
+        <div class="stat-label">Total Patients</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-ico navy">✦</div>
+        <div class="stat-value">@Model.TotalDoctors</div>
+        <div class="stat-label">Active Doctors</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-ico amber">▤</div>
+        <div class="stat-value">@Model.TotalAppointments</div>
+        <div class="stat-label">Total Appointments</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-ico green">₨</div>
+        <div class="stat-value">Rs @total.ToString("N0")</div>
+        <div class="stat-label">Total Billed</div>
+    </div>
+</div>
+
+<div class="dash-cols">
+    <div class="panel">
+        <div class="panel-head">Appointments by status</div>
+        <div class="panel-body" style="padding:18px 22px;">
+            <div style="margin-bottom:16px;">
+                <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+                    <span><span class="badge-pill b-blue">Scheduled</span></span><strong>@scheduled (@Pct(scheduled, apptTotal)%)</strong>
+                </div>
+                <div style="height:8px;background:#eef1f5;border-radius:999px;overflow:hidden;">
+                    <div style="height:100%;width:@Pct(scheduled, apptTotal)%;background:var(--navy-700);"></div>
+                </div>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+                    <span><span class="badge-pill b-green">Completed</span></span><strong>@completed (@Pct(completed, apptTotal)%)</strong>
+                </div>
+                <div style="height:8px;background:#eef1f5;border-radius:999px;overflow:hidden;">
+                    <div style="height:100%;width:@Pct(completed, apptTotal)%;background:var(--green);"></div>
+                </div>
+            </div>
+            <div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+                    <span><span class="badge-pill b-red">Cancelled</span></span><strong>@cancelled (@Pct(cancelled, apptTotal)%)</strong>
+                </div>
+                <div style="height:8px;background:#eef1f5;border-radius:999px;overflow:hidden;">
+                    <div style="height:100%;width:@Pct(cancelled, apptTotal)%;background:var(--red);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">Billing summary</div>
+        <div class="panel-body" style="padding:18px 22px;">
+            <div class="list-row" style="justify-content:space-between;">
+                <span>Paid invoices</span>
+                <strong>@paid (@Pct(paid, invTotal)%)</strong>
+            </div>
+            <div class="list-row" style="justify-content:space-between;">
+                <span>Unpaid invoices</span>
+                <strong>@unpaid (@Pct(unpaid, invTotal)%)</strong>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--line);margin:10px 14px;" />
+            <div class="list-row" style="justify-content:space-between;">
+                <span style="color:var(--green);font-weight:600;">Revenue collected</span>
+                <strong style="color:var(--green);">Rs @Model.TotalRevenue.ToString("N0")</strong>
+            </div>
+            <div class="list-row" style="justify-content:space-between;">
+                <span style="color:var(--amber);font-weight:600;">Outstanding</span>
+                <strong style="color:var(--amber);">Rs @Model.OutstandingAmount.ToString("N0")</strong>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+@model List<Invoice>
+@{
+    ViewData["Title"] = "My Invoices";
+}
+
+<div class="page-head">
+    <div>
+        <h2>My Invoices</h2>
+        <div class="sub">@Model.Count invoice(s)</div>
+    </div>
+</div>
+
+<div class="table-card">
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Issued</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">#@i.Id.ToString("D4")</td>
+                        <td>@(string.IsNullOrEmpty(i.Description) ? "—" : i.Description)</td>
+                        <td class="cell-strong">Rs @i.Amount.ToString("N0")</td>
+                        <td>@i.IssuedDate.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @if (i.Status == "Paid")
+                            {
+                                <span class="badge-pill b-green">Paid</span>
+                            }
+                            else
+                            {
+                                <span class="badge-pill b-amber">Unpaid</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-ico">₨</div>
+            <h4>No invoices</h4>
+            <p>You don't have any invoices yet.</p>
+        </div>
+    }
+</div>

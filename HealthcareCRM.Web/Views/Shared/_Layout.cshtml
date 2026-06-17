@@ -1,0 +1,96 @@
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    string Active(string c) => string.Equals(controller, c, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    string ActiveAction(string c, string a) =>
+        (string.Equals(controller, c, StringComparison.OrdinalIgnoreCase)
+         && string.Equals(action, a, StringComparison.OrdinalIgnoreCase)) ? "active" : "";
+
+    var userName = User.Identity?.Name ?? "User";
+    var initials = string.Join("", userName.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                       .Take(2).Select(s => char.ToUpper(s[0])));
+    var isAdmin = User.IsInRole("Admin");
+    var isDoctor = User.IsInRole("Doctor");
+    var isPatient = User.IsInRole("Patient");
+    var roleLabel = isAdmin ? "Administrator" : isDoctor ? "Doctor" : isPatient ? "Patient" : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · HealthCare CRM</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="app-body">
+    <div class="app-shell">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-logo">✚</span>
+                <span class="brand-text">HealthCare<span class="brand-accent">CRM</span></span>
+            </div>
+            <nav class="sidebar-nav">
+                @if (isAdmin)
+                {
+                    <a class="nav-link @Active("Dashboard")" asp-controller="Dashboard" asp-action="Index"><span class="nav-ico">▦</span> Dashboard</a>
+                    <a class="nav-link @Active("Patients")" asp-controller="Patients" asp-action="Index"><span class="nav-ico">☺</span> Patients</a>
+                    <a class="nav-link @Active("Doctors")" asp-controller="Doctors" asp-action="Index"><span class="nav-ico">✦</span> Doctors</a>
+                    <a class="nav-link @Active("Appointments")" asp-controller="Appointments" asp-action="Index"><span class="nav-ico">▤</span> Appointments</a>
+                    <a class="nav-link @Active("Billing")" asp-controller="Billing" asp-action="Index"><span class="nav-ico">₨</span> Billing</a>
+                    <a class="nav-link @Active("Reports")" asp-controller="Reports" asp-action="Index"><span class="nav-ico">◷</span> Reports</a>
+                }
+                else if (isDoctor)
+                {
+                    <a class="nav-link @Active("Dashboard")" asp-controller="Dashboard" asp-action="Index"><span class="nav-ico">▦</span> Dashboard</a>
+                    <a class="nav-link @Active("Patients")" asp-controller="Patients" asp-action="Index"><span class="nav-ico">☺</span> My Patients</a>
+                    <a class="nav-link @Active("Appointments")" asp-controller="Appointments" asp-action="Index"><span class="nav-ico">▤</span> My Appointments</a>
+                }
+                else if (isPatient)
+                {
+                    <a class="nav-link @ActiveAction("Portal","Index")" asp-controller="Portal" asp-action="Index"><span class="nav-ico">▦</span> My Dashboard</a>
+                    <a class="nav-link @ActiveAction("Portal","Appointments")" asp-controller="Portal" asp-action="Appointments"><span class="nav-ico">▤</span> My Appointments</a>
+                    <a class="nav-link @ActiveAction("Portal","Invoices")" asp-controller="Portal" asp-action="Invoices"><span class="nav-ico">₨</span> My Invoices</a>
+                    <a class="nav-link @ActiveAction("Portal","Profile")" asp-controller="Portal" asp-action="Profile"><span class="nav-ico">☺</span> My Profile</a>
+                }
+            </nav>
+            <div class="sidebar-footer">
+                <div class="muted-small">Signed in as</div>
+                <div class="sidebar-user">@userName</div>
+                @if (!string.IsNullOrEmpty(roleLabel))
+                {
+                    <span class="badge-pill b-blue" style="margin-top:6px;display:inline-block;">@roleLabel</span>
+                }
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <div class="app-main">
+            <header class="topbar">
+                <button class="hamburger" type="button" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <h1 class="topbar-title">@ViewData["Title"]</h1>
+                <div class="topbar-right">
+                    <div class="avatar" title="@userName">@initials</div>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                        <button type="submit" class="btn-logout">Sign out</button>
+                    </form>
+                </div>
+            </header>
+
+            <main class="content">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="toast-msg success">@TempData["Success"]</div>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

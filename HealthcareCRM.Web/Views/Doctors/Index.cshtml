@@ -1,0 +1,81 @@
+@model List<Doctor>
+@{
+    ViewData["Title"] = "Doctors";
+    var search = ViewBag.Search as string;
+}
+
+<div class="page-head">
+    <div>
+        <h2>Doctors</h2>
+        <div class="sub">@Model.Count doctor(s) on staff</div>
+    </div>
+    <a asp-action="AddEdit" class="btn btn-primary">+ Add Doctor</a>
+</div>
+
+<form asp-action="Index" method="get" class="toolbar">
+    <div class="search-group">
+        <input type="text" name="search" value="@search" placeholder="Search by name or specialization..." />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    @if (!string.IsNullOrEmpty(search))
+    {
+        <a asp-action="Index" class="btn btn-secondary">Clear</a>
+    }
+</form>
+
+<div class="table-card">
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Specialization</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@d.FullName</td>
+                        <td>@d.Specialization</td>
+                        <td>@(string.IsNullOrEmpty(d.Email) ? "—" : d.Email)</td>
+                        <td>@(string.IsNullOrEmpty(d.PhoneNumber) ? "—" : d.PhoneNumber)</td>
+                        <td>
+                            @if (d.IsActive)
+                            {
+                                <span class="badge-pill b-green">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge-pill b-gray">Inactive</span>
+                            }
+                        </td>
+                        <td style="text-align:right;">
+                            <div class="action-group">
+                                <a asp-action="AddEdit" asp-route-id="@d.Id" class="btn btn-outline btn-sm">Edit</a>
+                                <form asp-action="Delete" asp-route-id="@d.Id" method="post"
+                                      onsubmit="return confirm('Deactivate this doctor?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Deactivate</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-ico">✦</div>
+            <h4>No doctors found</h4>
+            <p>@(string.IsNullOrEmpty(search) ? "Add your first doctor to get started." : "Try a different search term.")</p>
+            <a asp-action="AddEdit" class="btn btn-primary">+ Add Doctor</a>
+        </div>
+    }
+</div>
