@@ -1,9 +1,13 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using HealthcareCRM.API.Data;
 using HealthcareCRM.API.Models;
 using HealthcareCRM.API.Models.Dtos;
 using HealthcareCRM.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HealthcareCRM.API.Controllers
 {
@@ -12,7 +16,13 @@ namespace HealthcareCRM.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _db;
-        public AuthController(AppDbContext db) => _db = db;
+        private readonly IConfiguration _config;
+
+        public AuthController(AppDbContext db, IConfiguration config)
+        {
+            _db = db;
+            _config = config;
+        }
 
         // POST: api/auth/register
         [HttpPost("register")]
@@ -55,7 +65,17 @@ namespace HealthcareCRM.API.Controllers
 
             await _db.SaveChangesAsync();
 
-            return Ok(new { user.Id, user.FullName, user.Email, user.Role, message = "Registration successful" });
+            var token = GenerateJwtToken(user);
+
+            return Ok(new
+            {
+                user.Id,
+                user.FullName,
+                user.Email,
+                user.Role,
+                token,
+                message = "Registration successful"
+            });
         }
 
         // POST: api/auth/login
@@ -69,8 +89,44 @@ namespace HealthcareCRM.API.Controllers
             if (user == null || !PasswordHasher.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized(new { message = "Invalid email or password." });
 
-            // NOTE: For a production API, issue a JWT here. Kept simple for this project.
-            return Ok(new { user.Id, user.FullName, user.Email, user.Role, message = "Login successful" });
+            var token = GenerateJwtToken(user);
+
+            return Ok(new
+            {
+                user.Id,
+                user.FullName,
+                user.Email,
+                user.Role,
+                token,
+                message = "Login successful"
+            });
+        }
+
+        // Generates a signed JWT containing the user's id, name, email and role.
+        private string GenerateJwtToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var expiryMinutes = double.Parse(_config["Jwt:ExpiryMinutes"] ?? "60");
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

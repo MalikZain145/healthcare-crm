@@ -20,5 +20,9 @@ namespace HealthcareCRM.Web.Models.ViewModels
         [Display(Name = "Confirm password")]
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please select a role.")]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = "Patient";
     }
 }
