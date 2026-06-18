@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.7.11911.148 stable
+VisualStudioVersion = 18.7.11911.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthcareCRM.Web", "HealthcareCRM.Web\HealthcareCRM.Web.csproj", "{8F8C71EE-CD53-4A61-B2D8-E7FB319A1096}"
 EndProject
@@ -9,6 +9,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-CBA4-4BD7-BDA2-03AB5EADE7D5}"
 	ProjectSection(SolutionItems) = preProject
 		docs\AuthTestCases.md = docs\AuthTestCases.md
+		docs\PatientTestCases.md = docs\PatientTestCases.md
 		docs\Wireframes_RegisterAndRoleManagement.docx = docs\Wireframes_RegisterAndRoleManagement.docx
 	EndProjectSection
 EndProject
