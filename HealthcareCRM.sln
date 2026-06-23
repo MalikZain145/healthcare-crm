@@ -13,6 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-C
 		docs\Wireframes_RegisterAndRoleManagement.docx = docs\Wireframes_RegisterAndRoleManagement.docx
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{4ABA2E4E-6D39-48AA-8629-A1D9DB1F1D97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{5DCA198D-4809-491D-B2C5-0680BDD0AD05}"
+	ProjectSection(SolutionItems) = preProject
+		database\Scripts\MedicalHistory.sql = database\Scripts\MedicalHistory.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +37,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5DCA198D-4809-491D-B2C5-0680BDD0AD05} = {4ABA2E4E-6D39-48AA-8629-A1D9DB1F1D97}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B034632-B3DF-44E7-9C91-D810FB5B8D97}
