@@ -22,7 +22,8 @@ namespace HealthcareCRM.API.Controllers
             {
                 var t = search.Trim().ToLower();
                 query = query.Where(p => (p.FirstName + " " + p.LastName).ToLower().Contains(t)
-                                      || p.Email.ToLower().Contains(t));
+                                      || p.Email.ToLower().Contains(t)
+                                      || (p.PhoneNumber != null && p.PhoneNumber.Contains(t)));
             }
             var list = await query.OrderBy(p => p.FirstName).ToListAsync();
             return Ok(list);
@@ -43,9 +44,15 @@ namespace HealthcareCRM.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var p = new Patient
             {
-                FirstName = dto.FirstName, LastName = dto.LastName, Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber, DateOfBirth = dto.DateOfBirth,
-                Gender = dto.Gender, BloodType = dto.BloodType, DoctorId = dto.DoctorId, Address = dto.Address
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
+                DateOfBirth = dto.DateOfBirth,
+                Gender = dto.Gender,
+                BloodType = dto.BloodType,
+                DoctorId = dto.DoctorId,
+                Address = dto.Address
             };
             _db.Patients.Add(p);
             await _db.SaveChangesAsync();
