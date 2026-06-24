@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-C
 	ProjectSection(SolutionItems) = preProject
 		docs\AuthTestCases.md = docs\AuthTestCases.md
 		docs\PatientTestCases.md = docs\PatientTestCases.md
+		docs\Wireframes_PatientProfileAndMedicalHistory.docx = docs\Wireframes_PatientProfileAndMedicalHistory.docx
 		docs\Wireframes_RegisterAndRoleManagement.docx = docs\Wireframes_RegisterAndRoleManagement.docx
 	EndProjectSection
 EndProject
