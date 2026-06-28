@@ -1,7 +1,5 @@
 # Patient CRUD & Search — Security / Auth Test Cases
-Member B | Healthcare CRM
-
----
+Member A| Healthcare CRM
 
 ## TEST CASE 1 — Unauthorized User Blocked from Patient CRUD
 
