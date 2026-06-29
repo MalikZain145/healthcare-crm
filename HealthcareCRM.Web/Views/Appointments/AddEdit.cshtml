@@ -14,7 +14,7 @@
 <div class="card form-card">
     <div class="card-head"><h3>Appointment details</h3></div>
     <div class="form-body">
-        <form asp-action="AddEdit" method="post">
+        <form asp-action="AddEdit" method="post" id="appointmentForm">
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="ModelOnly" class="alert-box error"></div>
 
@@ -34,10 +34,28 @@
                     <span asp-validation-for="DoctorId" class="field-error"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="AppointmentDate" class="form-label"></label>
-                    <input asp-for="AppointmentDate" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
-                    <span asp-validation-for="AppointmentDate" class="field-error"></span>
+                    <label class="form-label">Appointment Date</label>
+                    <input type="date" id="appointmentDateOnly" class="form-control" />
                 </div>
+                <div class="form-group">
+                    <label class="form-label">Time Slot</label>
+                    <select id="appointmentTimeSlot" class="form-select">
+                        <option value="">Select time slot</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="14:00">02:00 PM</option>
+                        <option value="14:30">02:30 PM</option>
+                        <option value="15:00">03:00 PM</option>
+                        <option value="15:30">03:30 PM</option>
+                        <option value="16:00">04:00 PM</option>
+                    </select>
+                </div>
+                <input type="hidden" asp-for="AppointmentDate" id="appointmentDateHidden" />
+                <span asp-validation-for="AppointmentDate" class="field-error"></span>
                 <div class="form-group">
                     <label asp-for="Status" class="form-label"></label>
                     <select asp-for="Status" class="form-select">
@@ -69,4 +87,30 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        const hiddenField = document.getElementById('appointmentDateHidden');
+        const dateField = document.getElementById('appointmentDateOnly');
+        const timeField = document.getElementById('appointmentTimeSlot');
+
+        // If editing, pre-fill date/time from existing hidden value
+        window.addEventListener('DOMContentLoaded', function () {
+            if (hiddenField.value) {
+                const dt = new Date(hiddenField.value);
+                dateField.value = dt.toISOString().split('T')[0];
+                const hh = String(dt.getHours()).padStart(2, '0');
+                const mm = String(dt.getMinutes()).padStart(2, '0');
+                timeField.value = hh + ':' + mm;
+            }
+        });
+
+        document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+            if (dateField.value && timeField.value) {
+                hiddenField.value = dateField.value + 'T' + timeField.value + ':00';
+            } else {
+                e.preventDefault();
+                alert('Please select both a date and a time slot.');
+                return false;
+            }
+        });
+    </script>
 }
