@@ -10,7 +10,7 @@ namespace HealthcareCRM.Web.Services
         private readonly AppDbContext _db;
         public AppointmentService(AppDbContext db) => _db = db;
 
-        public async Task<List<Appointment>> GetAllAsync(string? search = null, string? status = null, int? doctorId = null)
+        public async Task<List<Appointment>> GetAllAsync(string? search = null, string? status = null, int? doctorId = null, DateTime? date = null)
         {
             var query = _db.Appointments
                 .Include(a => a.Patient)
@@ -22,6 +22,9 @@ namespace HealthcareCRM.Web.Services
 
             if (doctorId.HasValue)
                 query = query.Where(a => a.DoctorId == doctorId.Value);
+
+            if (date.HasValue)
+                query = query.Where(a => a.AppointmentDate.Date == date.Value.Date);
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -50,9 +53,13 @@ namespace HealthcareCRM.Web.Services
         {
             var a = new Appointment
             {
-                PatientId = m.PatientId, DoctorId = m.DoctorId,
-                AppointmentDate = m.AppointmentDate, Reason = m.Reason,
-                Status = m.Status, Notes = m.Notes, CreatedAt = DateTime.UtcNow
+                PatientId = m.PatientId,
+                DoctorId = m.DoctorId,
+                AppointmentDate = m.AppointmentDate,
+                Reason = m.Reason,
+                Status = m.Status,
+                Notes = m.Notes,
+                CreatedAt = DateTime.UtcNow
             };
             _db.Appointments.Add(a);
             await _db.SaveChangesAsync();

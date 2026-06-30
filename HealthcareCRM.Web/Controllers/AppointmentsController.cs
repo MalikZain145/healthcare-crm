@@ -28,12 +28,22 @@ namespace HealthcareCRM.Web.Controllers
             return doc?.Id;
         }
 
-        public async Task<IActionResult> Index(string? search, string? status)
+        public async Task<IActionResult> Index(string? search, string? status, DateTime? date, int? filterDoctorId)
         {
             ViewBag.Search = search;
             ViewBag.Status = status;
-            int? scope = User.IsInRole("Admin") ? null : (await CurrentDoctorIdAsync() ?? -1);
-            return View(await _appointments.GetAllAsync(search, status, scope));
+            ViewBag.FilterDate = date;
+            ViewBag.FilterDoctorId = filterDoctorId;
+
+            var doctors = await _doctors.GetActiveAsync();
+            ViewBag.DoctorFilterList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(
+                doctors.Select(d => new { d.Id, Name = d.FullName }), "Id", "Name");
+
+            int? scope = User.IsInRole("Admin")
+                ? filterDoctorId
+                : (await CurrentDoctorIdAsync() ?? -1);
+
+            return View(await _appointments.GetAllAsync(search, status, scope, date));
         }
 
         [HttpGet]

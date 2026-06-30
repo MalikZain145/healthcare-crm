@@ -41,6 +41,16 @@
             <option value="Completed" selected="@(status == "Completed")">Completed</option>
             <option value="Cancelled" selected="@(status == "Cancelled")">Cancelled</option>
         </select>
+        <input type="date" name="date" value="@(ViewBag.FilterDate != null ? ((DateTime)ViewBag.FilterDate).ToString("yyyy-MM-dd") : "")"
+               class="filter-select" onchange="this.form.submit()" />
+
+        @if (User.IsInRole("Admin"))
+        {
+            <select name="filterDoctorId" asp-items="ViewBag.DoctorFilterList as Microsoft.AspNetCore.Mvc.Rendering.SelectList"
+                    class="filter-select" onchange="this.form.submit()">
+                <option value="">All doctors</option>
+            </select>
+        }
         @if (!string.IsNullOrEmpty(search) || !string.IsNullOrEmpty(status))
         {
             <a asp-action="Index" class="btn btn-secondary">Clear</a>
