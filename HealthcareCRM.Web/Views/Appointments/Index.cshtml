@@ -75,7 +75,18 @@
                     @foreach (var a in Model)
                     {
                         <tr>
-                            <td class="cell-strong">@(a.Patient?.FullName ?? "—")</td>
+                            <td class="cell-strong">
+                                @if (a.Patient != null)
+                                {
+                                    <a asp-controller="Patients" asp-action="AddEdit" asp-route-id="@a.PatientId" style="color: inherit; text-decoration: underline;">
+                                        @a.Patient.FullName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <text>—</text>
+                                }
+                            </td>
                             <td>@(a.Doctor?.FullName ?? "—")</td>
                             <td>@a.AppointmentDate.ToString("MMM dd, yyyy · h:mm tt")</td>
                             <td>@(string.IsNullOrEmpty(a.Reason) ? "—" : a.Reason)</td>
