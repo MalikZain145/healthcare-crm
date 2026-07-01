@@ -13,11 +13,28 @@ namespace HealthcareCRM.API.Controllers
         private readonly AppDbContext _db;
         public AppointmentsController(AppDbContext db) => _db = db;
 
+        /// <summary>
+        /// Get all appointments. Optionally filter by status, date, and/or doctorId.
+        /// </summary>
+        /// <param name="status">Filter by appointment status (Scheduled, Completed, Cancelled)</param>
+        /// <param name="date">Filter by appointment date (yyyy-MM-dd)</param>
+        /// <param name="doctorId">Filter by Doctor ID</param>
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? status)
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string? status,
+            [FromQuery] DateTime? date,
+            [FromQuery] int? doctorId)
         {
             var query = _db.Appointments.Include(a => a.Patient).Include(a => a.Doctor).AsQueryable();
-            if (!string.IsNullOrWhiteSpace(status)) query = query.Where(a => a.Status == status);
+
+            if (!string.IsNullOrWhiteSpace(status))
+                query = query.Where(a => a.Status == status);
+
+            if (date.HasValue)
+                query = query.Where(a => a.AppointmentDate.Date == date.Value.Date);
+
+            if (doctorId.HasValue)
+                query = query.Where(a => a.DoctorId == doctorId.Value);
 
             var list = await query.OrderByDescending(a => a.AppointmentDate)
                 .Select(a => new
@@ -31,6 +48,10 @@ namespace HealthcareCRM.API.Controllers
             return Ok(list);
         }
 
+        /// <summary>
+        /// Get a single appointment by ID.
+        /// </summary>
+        /// <param name="id">Appointment ID</param>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -45,6 +66,9 @@ namespace HealthcareCRM.API.Controllers
             });
         }
 
+        /// <summary>
+        /// Create a new appointment. Returns 409 Conflict if the doctor already has an appointment at the same date and time.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AppointmentDto dto)
         {
@@ -53,6 +77,15 @@ namespace HealthcareCRM.API.Controllers
                 return BadRequest(new { message = "Invalid PatientId" });
             if (!await _db.Doctors.AnyAsync(d => d.Id == dto.DoctorId))
                 return BadRequest(new { message = "Invalid DoctorId" });
+
+            // Double-booking conflict check
+            bool conflict = await _db.Appointments.AnyAsync(a =>
+                a.DoctorId == dto.DoctorId &&
+                a.AppointmentDate == dto.AppointmentDate &&
+                a.Status != "Cancelled");
+
+            if (conflict)
+                return Conflict(new { message = "Doctor already has an appointment at this date and time." });
 
             var a = new Appointment
             {
@@ -65,12 +98,26 @@ namespace HealthcareCRM.API.Controllers
             return CreatedAtAction(nameof(Get), new { id = a.Id }, new { a.Id });
         }
 
+        /// <summary>
+        /// Update an existing appointment. Returns 409 Conflict if the doctor already has another appointment at the same date and time.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] AppointmentDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var a = await _db.Appointments.FindAsync(id);
             if (a == null) return NotFound(new { message = "Appointment not found" });
+
+            // Double-booking conflict check (exclude this appointment itself)
+            bool conflict = await _db.Appointments.AnyAsync(x =>
+                x.Id != id &&
+                x.DoctorId == dto.DoctorId &&
+                x.AppointmentDate == dto.AppointmentDate &&
+                x.Status != "Cancelled");
+
+            if (conflict)
+                return Conflict(new { message = "Doctor already has an appointment at this date and time." });
+
             a.PatientId = dto.PatientId; a.DoctorId = dto.DoctorId;
             a.AppointmentDate = dto.AppointmentDate; a.Reason = dto.Reason;
             a.Status = dto.Status; a.Notes = dto.Notes;
@@ -78,6 +125,10 @@ namespace HealthcareCRM.API.Controllers
             return Ok(new { message = "Appointment updated" });
         }
 
+        /// <summary>
+        /// Delete an appointment by ID.
+        /// </summary>
+        /// <param name="id">Appointment ID</param>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
