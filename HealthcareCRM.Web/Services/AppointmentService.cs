@@ -58,7 +58,7 @@ namespace HealthcareCRM.Web.Services
                 AppointmentDate = m.AppointmentDate,
                 Reason = m.Reason,
                 Status = m.Status,
-                Notes = m.Notes,
+                Notes = m.Notes ?? string.Empty,
                 CreatedAt = DateTime.UtcNow
             };
             _db.Appointments.Add(a);

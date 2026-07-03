@@ -21,9 +21,9 @@ namespace HealthcareCRM.Web.Models.ViewModels
         [Display(Name = "Reason")]
         public string Reason { get; set; } = string.Empty;
 
-        [Required]
+      
         public string Status { get; set; } = "Scheduled";
 
-        public string Notes { get; set; } = string.Empty;
+        public string? Notes { get; set; }
     }
 }

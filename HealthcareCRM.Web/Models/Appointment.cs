@@ -24,7 +24,7 @@ namespace HealthcareCRM.Web.Models
         public string Status { get; set; } = "Scheduled"; // Scheduled | Completed | Cancelled
 
         [StringLength(500)]
-        public string Notes { get; set; } = string.Empty;
+        public string? Notes { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
