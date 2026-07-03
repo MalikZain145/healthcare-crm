@@ -11,6 +11,7 @@ namespace HealthcareCRM.Web.Services
         Task<Appointment> CreateAsync(AppointmentViewModel model);
         Task<Appointment?> UpdateAsync(int id, AppointmentViewModel model);
         Task<bool> DeleteAsync(int id);
+        Task<bool> HasConflictAsync(int doctorId, DateTime appointmentDate, int? excludeId);
         Task<int> CountAsync();
     }
 }

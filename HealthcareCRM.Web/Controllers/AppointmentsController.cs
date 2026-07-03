@@ -87,8 +87,25 @@ namespace HealthcareCRM.Web.Controllers
                 return View(model);
             }
 
-            if (model.Id == 0) await _appointments.CreateAsync(model);
-            else await _appointments.UpdateAsync(model.Id, model);
+            bool conflict = false;
+
+            if (model.Id == 0)
+            {
+                conflict = await _appointments.HasConflictAsync(model.DoctorId, model.AppointmentDate, null);
+                if (!conflict) await _appointments.CreateAsync(model);
+            }
+            else
+            {
+                conflict = await _appointments.HasConflictAsync(model.DoctorId, model.AppointmentDate, model.Id);
+                if (!conflict) await _appointments.UpdateAsync(model.Id, model);
+            }
+
+            if (conflict)
+            {
+                await PopulateDropdownsAsync();
+                ViewBag.ConflictError = true;
+                return View(model);
+            }
 
             TempData["Success"] = model.Id == 0 ? "Appointment booked." : "Appointment updated.";
             return RedirectToAction(nameof(Index));

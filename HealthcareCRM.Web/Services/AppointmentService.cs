@@ -85,6 +85,14 @@ namespace HealthcareCRM.Web.Services
             await _db.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> HasConflictAsync(int doctorId, DateTime appointmentDate, int? excludeId)
+        {
+            return await _db.Appointments.AnyAsync(a =>
+                a.DoctorId == doctorId &&
+                a.AppointmentDate == appointmentDate &&
+                a.Status != "Cancelled" &&
+                (excludeId == null || a.Id != excludeId.Value));
+        }
 
         public Task<int> CountAsync() => _db.Appointments.CountAsync();
     }

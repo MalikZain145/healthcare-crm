@@ -17,6 +17,9 @@
         <form asp-action="AddEdit" method="post" id="appointmentForm">
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="ModelOnly" class="alert-box error"></div>
+            <div id="conflictError" class="alert-box error" style="display:none;">
+                ⚠️ This doctor already has an appointment at this date and time. Please choose a different time slot.
+            </div>
 
             <div class="form-grid">
                 <div class="form-group">
@@ -84,15 +87,14 @@
         </form>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
         const hiddenField = document.getElementById('appointmentDateHidden');
         const dateField = document.getElementById('appointmentDateOnly');
         const timeField = document.getElementById('appointmentTimeSlot');
+        const conflictError = document.getElementById('conflictError');
 
-        // If editing, pre-fill date/time from existing hidden value
         window.addEventListener('DOMContentLoaded', function () {
             if (hiddenField.value) {
                 const dt = new Date(hiddenField.value);
@@ -102,8 +104,17 @@
                 timeField.value = hh + ':' + mm;
             }
         });
-
+                // Show conflict error if set by server
+        @if (ViewBag.ConflictError == true)
+        {
+                <text>
+                    window.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('conflictError').style.display = 'block';
+                    });
+                </text>
+        }
         document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+            conflictError.style.display = 'none';
             if (dateField.value && timeField.value) {
                 hiddenField.value = dateField.value + 'T' + timeField.value + ':00';
             } else {
@@ -113,4 +124,5 @@
             }
         });
     </script>
+}
 }
