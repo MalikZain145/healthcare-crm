@@ -8,6 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthcareCRM.API", "Health
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-CBA4-4BD7-BDA2-03AB5EADE7D5}"
 	ProjectSection(SolutionItems) = preProject
+		docs\AppointmentTestCases_Week4.md = docs\AppointmentTestCases_Week4.md
 		docs\AuthTestCases.md = docs\AuthTestCases.md
 		docs\PatientTestCases.md = docs\PatientTestCases.md
 		docs\SecurityTestCases.md = docs\SecurityTestCases.md
