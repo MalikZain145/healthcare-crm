@@ -17,6 +17,12 @@
 </style>
 
 <div id="billingContent" style="display:none;">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-box success" style="margin-bottom:16px;">
+            ✅ @TempData["Success"]
+        </div>
+    }
     <div class="page-head">
     <div>
         <h2>Billing &amp; Invoices</h2>
