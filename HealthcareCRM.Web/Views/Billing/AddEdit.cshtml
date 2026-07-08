@@ -52,6 +52,21 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">@(isEdit ? "Save changes" : "Create invoice")</button>
+
+                @if (isEdit && Model.Status != "Paid")
+                {
+                    <form asp-action="MarkPaid" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success"
+                                onclick="return confirm('Mark this invoice as paid?');">
+                            ✓ Mark as Paid
+                        </button>
+                    </form>
+                }
+                else if (isEdit && Model.Status == "Paid")
+                {
+                    <button class="btn btn-success" disabled>✓ Already Paid</button>
+                }
+
                 <a asp-action="Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
