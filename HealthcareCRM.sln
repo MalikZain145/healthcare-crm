@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-C
 		docs\PatientTestCases.md = docs\PatientTestCases.md
 		docs\SecurityTestCases.md = docs\SecurityTestCases.md
 		docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx = docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx
+		docs\Week5_Wireframes_BillingDashboardAndInvoiceDetail.docx = docs\Week5_Wireframes_BillingDashboardAndInvoiceDetail.docx
 		docs\Wireframes_PatientProfileAndMedicalHistory.docx = docs\Wireframes_PatientProfileAndMedicalHistory.docx
 		docs\Wireframes_RegisterAndRoleManagement.docx = docs\Wireframes_RegisterAndRoleManagement.docx
 	EndProjectSection
