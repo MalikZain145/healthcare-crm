@@ -1,0 +1,51 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11911.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthcareCRM.Web", "HealthcareCRM.Web\HealthcareCRM.Web.csproj", "{8F8C71EE-CD53-4A61-B2D8-E7FB319A1096}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthcareCRM.API", "HealthcareCRM.API\HealthcareCRM.API.csproj", "{DFA8505D-CDC8-4B7E-971B-8DFABAD4A882}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-CBA4-4BD7-BDA2-03AB5EADE7D5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\AppointmentTestCases_Week4.md = docs\AppointmentTestCases_Week4.md
+		docs\AuthTestCases.md = docs\AuthTestCases.md
+		docs\PatientTestCases.md = docs\PatientTestCases.md
+		docs\SecurityTestCases.md = docs\SecurityTestCases.md
+		docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx = docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx
+		docs\Wireframes_PatientProfileAndMedicalHistory.docx = docs\Wireframes_PatientProfileAndMedicalHistory.docx
+		docs\Wireframes_RegisterAndRoleManagement.docx = docs\Wireframes_RegisterAndRoleManagement.docx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{4ABA2E4E-6D39-48AA-8629-A1D9DB1F1D97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{5DCA198D-4809-491D-B2C5-0680BDD0AD05}"
+	ProjectSection(SolutionItems) = preProject
+		database\Scripts\MedicalHistory.sql = database\Scripts\MedicalHistory.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F8C71EE-CD53-4A61-B2D8-E7FB319A1096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F8C71EE-CD53-4A61-B2D8-E7FB319A1096}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F8C71EE-CD53-4A61-B2D8-E7FB319A1096}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F8C71EE-CD53-4A61-B2D8-E7FB319A1096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA8505D-CDC8-4B7E-971B-8DFABAD4A882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA8505D-CDC8-4B7E-971B-8DFABAD4A882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA8505D-CDC8-4B7E-971B-8DFABAD4A882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA8505D-CDC8-4B7E-971B-8DFABAD4A882}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5DCA198D-4809-491D-B2C5-0680BDD0AD05} = {4ABA2E4E-6D39-48AA-8629-A1D9DB1F1D97}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B034632-B3DF-44E7-9C91-D810FB5B8D97}
+	EndGlobalSection
+EndGlobal

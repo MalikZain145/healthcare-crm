@@ -1,0 +1,135 @@
+@model AppointmentViewModel
+@{
+    var isEdit = Model.Id != 0;
+    ViewData["Title"] = isEdit ? "Edit Appointment" : "Book Appointment";
+    var patients = ViewBag.Patients as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    var doctors = ViewBag.Doctors as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+}
+
+<div class="page-head">
+    <div><h2>@(isEdit ? "Edit Appointment" : "Book Appointment")</h2></div>
+    <a asp-action="Index" class="btn btn-secondary">← Back to list</a>
+</div>
+
+<div class="card form-card">
+    <div class="card-head"><h3>Appointment details</h3></div>
+    <div class="form-body">
+        <form asp-action="AddEdit" method="post" id="appointmentForm" novalidate>
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="alert-box error"></div>
+            <div id="conflictError" class="alert-box error" style="display:none;">
+                ⚠️ This doctor already has an appointment at this date and time. Please choose a different time slot.
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="PatientId" class="form-label"></label>
+                    <select asp-for="PatientId" asp-items="patients" class="form-select">
+                        <option value="">Select patient</option>
+                    </select>
+                    <span asp-validation-for="PatientId" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DoctorId" class="form-label"></label>
+                    <select asp-for="DoctorId" asp-items="doctors" class="form-select">
+                        <option value="">Select doctor</option>
+                    </select>
+                    <span asp-validation-for="DoctorId" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Appointment Date</label>
+                    <input type="date" id="appointmentDateOnly" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time Slot</label>
+                    <select id="appointmentTimeSlot" class="form-select">
+                        <option value="">Select time slot</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="14:00">02:00 PM</option>
+                        <option value="14:30">02:30 PM</option>
+                        <option value="15:00">03:00 PM</option>
+                        <option value="15:30">03:30 PM</option>
+                        <option value="16:00">04:00 PM</option>
+                    </select>
+                </div>
+                <input type="hidden" asp-for="AppointmentDate" id="appointmentDateHidden" />
+                <span asp-validation-for="AppointmentDate" class="field-error"></span>
+                <div class="form-group">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <span asp-validation-for="Status" class="field-error"></span>
+                </div>
+                <div class="form-group full">
+                    <label asp-for="Reason" class="form-label"></label>
+                    <input asp-for="Reason" class="form-control" placeholder="e.g. Routine checkup" />
+                    <span asp-validation-for="Reason" class="field-error"></span>
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Notes <span style="color:#888; font-size:12px;">(optional)</span></label>
+                    <textarea name="Notes" class="form-control" rows="2" placeholder="Any additional notes..." required="false" novalidate></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">@(isEdit ? "Save changes" : "Book appointment")</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const hiddenField = document.getElementById('appointmentDateHidden');
+        const dateField = document.getElementById('appointmentDateOnly');
+        const timeField = document.getElementById('appointmentTimeSlot');
+        const conflictError = document.getElementById('conflictError');
+
+        window.addEventListener('DOMContentLoaded', function () {
+            // Remove required from Notes field
+            var notesField = document.querySelector('textarea[name="Notes"]');
+            if (notesField) {
+                notesField.removeAttribute('required');
+                notesField.removeAttribute('data-val');
+                notesField.removeAttribute('data-val-required');
+            }
+
+            if (hiddenField.value) {
+                const dt = new Date(hiddenField.value);
+                dateField.value = dt.toISOString().split('T')[0];
+                const hh = String(dt.getHours()).padStart(2, '0');
+                const mm = String(dt.getMinutes()).padStart(2, '0');
+                timeField.value = hh + ':' + mm;
+            }
+        });
+
+        @if (ViewBag.ConflictError == true)
+        {
+                <text>
+                    window.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('conflictError').style.display = 'block';
+                    });
+                </text>
+        }
+
+        document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+            conflictError.style.display = 'none';
+            if (dateField.value && timeField.value) {
+                hiddenField.value = dateField.value + 'T' + timeField.value + ':00';
+            } else {
+                e.preventDefault();
+                alert('Please select both a date and a time slot.');
+                return false;
+            }
+        });
+    </script>
+}

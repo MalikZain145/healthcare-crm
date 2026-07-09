@@ -1,0 +1,112 @@
+@model PortalDashboardViewModel
+@{
+    ViewData["Title"] = "My Dashboard";
+    var p = Model.Patient;
+    var outstanding = Model.Invoices.Where(i => i.Status != "Paid").Sum(i => i.Amount);
+    string Badge(string st) => st == "Completed" ? "b-green" : st == "Cancelled" ? "b-red" : "b-blue";
+}
+
+@if (p == null)
+{
+    <div class="empty-state">
+        <div class="empty-ico">☺</div>
+        <h4>Welcome!</h4>
+        <p>Your patient profile isn't set up yet. Please complete your profile so the clinic can reach you.</p>
+        <a asp-action="Profile" class="btn btn-primary">Complete my profile</a>
+    </div>
+}
+else
+{
+    <div class="page-head">
+        <div>
+            <h2>Welcome, @p.FirstName 👋</h2>
+            <div class="sub">Here's a quick look at your care.</div>
+        </div>
+        <a asp-action="Profile" class="btn btn-secondary">Edit profile</a>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-ico teal">▤</div>
+            <div class="stat-value">@Model.UpcomingAppointments.Count</div>
+            <div class="stat-label">Upcoming Appointments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-ico navy">₨</div>
+            <div class="stat-value">@Model.Invoices.Count</div>
+            <div class="stat-label">Total Invoices</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-ico amber">₨</div>
+            <div class="stat-value">@outstanding.ToString("N0")</div>
+            <div class="stat-label">Outstanding (Rs)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-ico green">♥</div>
+            <div class="stat-value">@(string.IsNullOrEmpty(p.BloodType) ? "—" : p.BloodType)</div>
+            <div class="stat-label">Blood Type</div>
+        </div>
+    </div>
+
+    <div class="dash-cols">
+        <div class="panel">
+            <div class="panel-head">
+                Upcoming Appointments
+                <a asp-action="Appointments">View all</a>
+            </div>
+            <div class="panel-body">
+                @if (Model.UpcomingAppointments.Any())
+                {
+                    @foreach (var a in Model.UpcomingAppointments)
+                    {
+                        <div class="list-row">
+                            <div class="list-avatar">@a.AppointmentDate.ToString("dd")</div>
+                            <div class="list-main">
+                                <div class="list-title">@(a.Doctor?.FullName ?? "Doctor")</div>
+                                <div class="list-sub">@a.AppointmentDate.ToString("MMM dd, h:mm tt") · @(string.IsNullOrEmpty(a.Reason) ? "Visit" : a.Reason)</div>
+                            </div>
+                            <span class="badge-pill @Badge(a.Status)">@a.Status</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state" style="padding:34px 20px;">
+                        <div class="empty-ico">▤</div>
+                        <p style="margin-top:8px;">No upcoming appointments.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                Recent Invoices
+                <a asp-action="Invoices">View all</a>
+            </div>
+            <div class="panel-body">
+                @if (Model.Invoices.Any())
+                {
+                    @foreach (var i in Model.Invoices.Take(5))
+                    {
+                        <div class="list-row">
+                            <div class="list-avatar">₨</div>
+                            <div class="list-main">
+                                <div class="list-title">Rs @i.Amount.ToString("N0")</div>
+                                <div class="list-sub">@(string.IsNullOrEmpty(i.Description) ? "Invoice" : i.Description) · @i.IssuedDate.ToString("MMM dd")</div>
+                            </div>
+                            <span class="badge-pill @(i.Status == "Paid" ? "b-green" : "b-amber")">@i.Status</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state" style="padding:34px 20px;">
+                        <div class="empty-ico">₨</div>
+                        <p style="margin-top:8px;">No invoices yet.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

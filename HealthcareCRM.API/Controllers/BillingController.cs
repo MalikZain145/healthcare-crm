@@ -13,6 +13,7 @@ namespace HealthcareCRM.API.Controllers
         private readonly AppDbContext _db;
         public BillingController(AppDbContext db) => _db = db;
 
+<<<<<<< HEAD
         /// <summary>
         /// Get all invoices. Optional filter by status: Paid, Unpaid, or Overdue
         /// (Overdue = Unpaid invoices whose DueDate has already passed).
@@ -34,10 +35,18 @@ namespace HealthcareCRM.API.Controllers
                     _ => query.Where(i => i.Status == status)
                 };
             }
+=======
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] string? status)
+        {
+            var query = _db.Invoices.Include(i => i.Patient).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(status)) query = query.Where(i => i.Status == status);
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
 
             var list = await query.OrderByDescending(i => i.IssuedDate)
                 .Select(i => new
                 {
+<<<<<<< HEAD
                     i.Id,
                     i.PatientId,
                     PatientName = i.Patient!.FirstName + " " + i.Patient!.LastName,
@@ -49,10 +58,16 @@ namespace HealthcareCRM.API.Controllers
                     i.DueDate,
                     i.PaidAt,
                     IsOverdue = i.Status == "Unpaid" && i.DueDate < DateTime.UtcNow
+=======
+                    i.Id, i.PatientId,
+                    PatientName = i.Patient!.FirstName + " " + i.Patient!.LastName,
+                    i.AppointmentId, i.Amount, i.Description, i.Status, i.IssuedDate
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
                 }).ToListAsync();
             return Ok(list);
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Get a single invoice by ID, including its payment history.
         /// </summary>
@@ -87,12 +102,27 @@ namespace HealthcareCRM.API.Controllers
         /// Create an invoice directly (manual PatientId + AppointmentId). Prefer POST /api/billing/generate
         /// when generating an invoice from an appointment, since it derives PatientId automatically.
         /// </summary>
+=======
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var i = await _db.Invoices.Include(x => x.Patient).FirstOrDefaultAsync(x => x.Id == id);
+            if (i == null) return NotFound(new { message = "Invoice not found" });
+            return Ok(new
+            {
+                i.Id, i.PatientId, PatientName = i.Patient!.FullName,
+                i.AppointmentId, i.Amount, i.Description, i.Status, i.IssuedDate
+            });
+        }
+
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] InvoiceDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             if (!await _db.Patients.AnyAsync(p => p.Id == dto.PatientId))
                 return BadRequest(new { message = "Invalid PatientId" });
+<<<<<<< HEAD
             if (!await _db.Appointments.AnyAsync(a => a.Id == dto.AppointmentId))
                 return BadRequest(new { message = "Invalid AppointmentId — invoice must be linked to a real appointment" });
 
@@ -105,12 +135,21 @@ namespace HealthcareCRM.API.Controllers
                 Status = dto.Status,
                 IssuedDate = dto.IssuedDate,
                 DueDate = dto.DueDate
+=======
+
+            var i = new Invoice
+            {
+                PatientId = dto.PatientId, AppointmentId = dto.AppointmentId,
+                Amount = dto.Amount, Description = dto.Description,
+                Status = dto.Status, IssuedDate = dto.IssuedDate
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             };
             _db.Invoices.Add(i);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(Get), new { id = i.Id }, new { i.Id });
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Generate a new invoice from an existing appointment. PatientId is derived automatically
         /// from the appointment, so the invoice can never be orphaned (no AppointmentId = 400 Bad Request,
@@ -155,12 +194,15 @@ namespace HealthcareCRM.API.Controllers
         /// <summary>
         /// Update an existing invoice's details.
         /// </summary>
+=======
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] InvoiceDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var i = await _db.Invoices.FindAsync(id);
             if (i == null) return NotFound(new { message = "Invoice not found" });
+<<<<<<< HEAD
             if (!await _db.Appointments.AnyAsync(a => a.Id == dto.AppointmentId))
                 return BadRequest(new { message = "Invalid AppointmentId — invoice must be linked to a real appointment" });
 
@@ -171,10 +213,16 @@ namespace HealthcareCRM.API.Controllers
             i.Status = dto.Status;
             i.IssuedDate = dto.IssuedDate;
             i.DueDate = dto.DueDate;
+=======
+            i.PatientId = dto.PatientId; i.AppointmentId = dto.AppointmentId;
+            i.Amount = dto.Amount; i.Description = dto.Description;
+            i.Status = dto.Status; i.IssuedDate = dto.IssuedDate;
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             await _db.SaveChangesAsync();
             return Ok(new { message = "Invoice updated" });
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Mark an invoice as Paid. Sets the PaidAt timestamp and creates (or updates) the
         /// associated Payment record for this invoice.
@@ -234,6 +282,19 @@ namespace HealthcareCRM.API.Controllers
         /// <summary>
         /// Delete an invoice by ID.
         /// </summary>
+=======
+        // PATCH: api/billing/5/pay
+        [HttpPatch("{id:int}/pay")]
+        public async Task<IActionResult> MarkPaid(int id)
+        {
+            var i = await _db.Invoices.FindAsync(id);
+            if (i == null) return NotFound(new { message = "Invoice not found" });
+            i.Status = "Paid";
+            await _db.SaveChangesAsync();
+            return Ok(new { message = "Invoice marked as paid" });
+        }
+
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {

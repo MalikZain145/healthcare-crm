@@ -94,6 +94,7 @@ namespace HealthcareCRM.API.Data
                 db.SaveChanges();
 
                 db.Invoices.AddRange(
+<<<<<<< HEAD
                     new Invoice { PatientId = patients[2].Id, AppointmentId = appts[2].Id, Amount = 3500m, Description = "Consultation + medicines", Status = "Paid",   IssuedDate = DateTime.Today.AddDays(-3), DueDate = DateTime.Today.AddDays(4),  PaidAt = DateTime.Today.AddDays(-2) },
                     new Invoice { PatientId = patients[0].Id, AppointmentId = appts[0].Id, Amount = 2000m, Description = "Consultation fee",          Status = "Unpaid", IssuedDate = DateTime.Today,             DueDate = DateTime.Today.AddDays(7) },
                     new Invoice { PatientId = patients[1].Id, AppointmentId = appts[1].Id, Amount = 1500m, Description = "Lab tests",                  Status = "Unpaid", IssuedDate = DateTime.Today.AddDays(-10), DueDate = DateTime.Today.AddDays(-3) } // overdue, for testing the Overdue filter
@@ -113,6 +114,11 @@ namespace HealthcareCRM.API.Data
                     new Hospital { Name = "Aga Khan University Hospital", Address = "Stadium Road, Karachi",          City = "Karachi",    PhoneNumber = "021-34930051", Latitude = 24.8929, Longitude = 67.0817 },
                     new Hospital { Name = "Jinnah Postgraduate Medical Centre", Address = "Rafiqui Shaheed Road, Karachi", City = "Karachi", PhoneNumber = "021-99201300", Latitude = 24.8546, Longitude = 67.0298 },
                     new Hospital { Name = "Nishtar Hospital",             Address = "Nishtar Road, Multan",           City = "Multan",     PhoneNumber = "061-9201133",  Latitude = 30.1798, Longitude = 71.4498 }
+=======
+                    new Invoice { PatientId = patients[2].Id, AppointmentId = appts[2].Id, Amount = 3500m, Description = "Consultation + medicines", Status = "Paid",   IssuedDate = DateTime.Today.AddDays(-3) },
+                    new Invoice { PatientId = patients[0].Id, Amount = 2000m, Description = "Consultation fee", Status = "Unpaid", IssuedDate = DateTime.Today },
+                    new Invoice { PatientId = patients[1].Id, Amount = 1500m, Description = "Lab tests",        Status = "Unpaid", IssuedDate = DateTime.Today }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
                 );
                 db.SaveChanges();
             }

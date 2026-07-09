@@ -40,16 +40,21 @@
           ],
           "request": {
             "method": "POST",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
+=======
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@healthcare.com\",\n  \"password\": \"Admin@123\"\n}"
             },
+<<<<<<< HEAD
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
               "host": [
@@ -61,22 +66,30 @@
                 "login"
               ]
             }
+=======
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
           "name": "Register",
           "request": {
             "method": "POST",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
+=======
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"New User\",\n  \"email\": \"newuser@healthcare.com\",\n  \"password\": \"User@123\",\n  \"role\": \"Staff\"\n}"
             },
+<<<<<<< HEAD
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
               "host": [
@@ -88,6 +101,9 @@
                 "register"
               ]
             }
+=======
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         }
       ]
@@ -99,6 +115,7 @@
           "name": "GET All Appointments",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -114,6 +131,13 @@
                 "api",
                 "appointments"
               ]
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"]
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             }
           }
         },
@@ -121,6 +145,7 @@
           "name": "GET Appointments (filter by status)",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -142,6 +167,14 @@
                   "value": "Scheduled"
                 }
               ]
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments?status=Scheduled",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"],
+              "query": [{ "key": "status", "value": "Scheduled" }]
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             }
           }
         },
@@ -149,6 +182,7 @@
           "name": "GET Appointments (filter by date + doctorId) [Track A]",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -175,6 +209,16 @@
                   "value": "1",
                   "description": "Filter by Doctor ID"
                 }
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments?date=2025-06-29&doctorId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"],
+              "query": [
+                { "key": "date", "value": "2025-06-29", "description": "Filter by appointment date (yyyy-MM-dd)" },
+                { "key": "doctorId", "value": "1", "description": "Filter by Doctor ID" }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
               ]
             },
             "description": "Track A feature: Filter appointments by date and doctorId.\n\nExample: GET /api/appointments?date=2025-06-29&doctorId=1"
@@ -184,6 +228,7 @@
           "name": "GET Appointment by ID",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -200,6 +245,13 @@
                 "appointments",
                 "1"
               ]
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "1"]
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             }
           }
         },
@@ -208,6 +260,7 @@
           "request": {
             "method": "POST",
             "header": [
+<<<<<<< HEAD
               {
                 "key": "Content-Type",
                 "value": "application/json"
@@ -216,6 +269,10 @@
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
               }
+=======
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             ],
             "body": {
               "mode": "raw",
@@ -223,6 +280,7 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/appointments",
+<<<<<<< HEAD
               "host": [
                 "{{baseUrl}}"
               ],
@@ -232,6 +290,12 @@
               ]
             },
             "description": "Creates a new appointment.\n\n\u2705 Returns 201 Created on success.\n\u274c Returns 409 Conflict if the same doctor already has an appointment at the exact same date and time (double-booking protection).\n\u274c Returns 400 Bad Request if PatientId or DoctorId is invalid."
+=======
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"]
+            },
+            "description": "Creates a new appointment.\n\n✅ Returns 201 Created on success.\n❌ Returns 409 Conflict if the same doctor already has an appointment at the exact same date and time (double-booking protection).\n❌ Returns 400 Bad Request if PatientId or DoctorId is invalid."
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
@@ -239,6 +303,7 @@
           "request": {
             "method": "POST",
             "header": [
+<<<<<<< HEAD
               {
                 "key": "Content-Type",
                 "value": "application/json"
@@ -247,6 +312,10 @@
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
               }
+=======
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             ],
             "body": {
               "mode": "raw",
@@ -254,6 +323,7 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/appointments",
+<<<<<<< HEAD
               "host": [
                 "{{baseUrl}}"
               ],
@@ -263,6 +333,12 @@
               ]
             },
             "description": "\u26a0\ufe0f Test case for double-booking conflict.\n\nIf Doctor 1 already has an appointment on 2025-07-15 at 10:00, this request should return:\n\n409 Conflict\n{\n  \"message\": \"Doctor already has an appointment at this date and time.\"\n}"
+=======
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"]
+            },
+            "description": "⚠️ Test case for double-booking conflict.\n\nIf Doctor 1 already has an appointment on 2025-07-15 at 10:00, this request should return:\n\n409 Conflict\n{\n  \"message\": \"Doctor already has an appointment at this date and time.\"\n}"
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
@@ -270,6 +346,7 @@
           "request": {
             "method": "PUT",
             "header": [
+<<<<<<< HEAD
               {
                 "key": "Content-Type",
                 "value": "application/json"
@@ -278,6 +355,10 @@
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
               }
+=======
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             ],
             "body": {
               "mode": "raw",
@@ -285,6 +366,7 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/appointments/1",
+<<<<<<< HEAD
               "host": [
                 "{{baseUrl}}"
               ],
@@ -295,12 +377,19 @@
               ]
             },
             "description": "Updates an appointment.\n\n\u2705 Returns 200 OK on success.\n\u274c Returns 409 Conflict if the updated time conflicts with another appointment for the same doctor."
+=======
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "1"]
+            },
+            "description": "Updates an appointment.\n\n✅ Returns 200 OK on success.\n❌ Returns 409 Conflict if the updated time conflicts with another appointment for the same doctor."
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
           "name": "DELETE Appointment",
           "request": {
             "method": "DELETE",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -317,6 +406,13 @@
                 "appointments",
                 "1"
               ]
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "1"]
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             }
           }
         }
@@ -329,6 +425,7 @@
           "name": "GET Emergency Location by ID [Track B]",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -346,6 +443,13 @@
                 "1",
                 "location"
               ]
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/emergency/1/location",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "emergency", "1", "location"]
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             },
             "description": "Track B feature: Mock endpoint that returns the real-time location of an emergency case.\n\nReturns:\n- EmergencyId\n- PatientName\n- Status (Active / Resolved)\n- Location (Latitude, Longitude, Address, Floor, Ward)\n- RespondingUnit\n- DispatchedAt\n- EstimatedArrivalMinutes\n\nTry IDs 1, 2, or any positive integer for mock data."
           }
@@ -354,6 +458,7 @@
           "name": "GET Emergency Location (ID 2)",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -371,6 +476,13 @@
                 "2",
                 "location"
               ]
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/emergency/2/location",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "emergency", "2", "location"]
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             }
           }
         }
@@ -383,6 +495,7 @@
           "name": "GET All Patients",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -399,12 +512,17 @@
                 "patients"
               ]
             }
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api", "patients"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
           "name": "GET Patient by ID",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -422,6 +540,10 @@
                 "1"
               ]
             }
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/patients/1", "host": ["{{baseUrl}}"], "path": ["api", "patients", "1"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
@@ -429,6 +551,7 @@
           "request": {
             "method": "POST",
             "header": [
+<<<<<<< HEAD
               {
                 "key": "Content-Type",
                 "value": "application/json"
@@ -437,11 +560,16 @@
                 "key": "Authorization",
                 "value": "Bearer {{token}}"
               }
+=======
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"firstName\": \"Ahmed\",\n  \"lastName\": \"Raza\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"Male\",\n  \"email\": \"ahmed.raza@email.com\",\n  \"phoneNumber\": \"0300-1234567\",\n  \"address\": \"Lahore, Pakistan\",\n  \"doctorId\": 1\n}"
             },
+<<<<<<< HEAD
             "url": {
               "raw": "{{baseUrl}}/api/patients",
               "host": [
@@ -452,6 +580,9 @@
                 "patients"
               ]
             }
+=======
+            "url": { "raw": "{{baseUrl}}/api/patients", "host": ["{{baseUrl}}"], "path": ["api", "patients"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         }
       ]
@@ -463,6 +594,7 @@
           "name": "GET All Doctors",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -479,12 +611,17 @@
                 "doctors"
               ]
             }
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/doctors", "host": ["{{baseUrl}}"], "path": ["api", "doctors"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         },
         {
           "name": "GET Doctor by ID",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -502,6 +639,10 @@
                 "1"
               ]
             }
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/doctors/1", "host": ["{{baseUrl}}"], "path": ["api", "doctors", "1"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         }
       ]
@@ -513,6 +654,7 @@
           "name": "GET All Invoices",
           "request": {
             "method": "GET",
+<<<<<<< HEAD
             "header": [
               {
                 "key": "Authorization",
@@ -783,9 +925,17 @@
                 "nearby"
               ]
             }
+=======
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/billing", "host": ["{{baseUrl}}"], "path": ["api", "billing"] }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
           }
         }
       ]
     }
   ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca

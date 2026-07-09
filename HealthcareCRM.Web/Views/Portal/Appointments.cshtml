@@ -1,0 +1,47 @@
+@model List<Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+    string Badge(string st) => st == "Completed" ? "b-green" : st == "Cancelled" ? "b-red" : "b-blue";
+}
+
+<div class="page-head">
+    <div>
+        <h2>My Appointments</h2>
+        <div class="sub">@Model.Count appointment(s)</div>
+    </div>
+</div>
+
+<div class="table-card">
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date &amp; Time</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@(a.Doctor?.FullName ?? "—")</td>
+                        <td>@a.AppointmentDate.ToString("MMM dd, yyyy · h:mm tt")</td>
+                        <td>@(string.IsNullOrEmpty(a.Reason) ? "—" : a.Reason)</td>
+                        <td><span class="badge-pill @Badge(a.Status)">@a.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-ico">▤</div>
+            <h4>No appointments yet</h4>
+            <p>When the clinic books an appointment for you, it will appear here.</p>
+        </div>
+    }
+</div>

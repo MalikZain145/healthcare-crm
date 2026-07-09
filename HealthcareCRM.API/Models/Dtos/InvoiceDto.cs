@@ -5,14 +5,19 @@ namespace HealthcareCRM.API.Models.Dtos
     public class InvoiceDto
     {
         [Required] public int PatientId { get; set; }
+<<<<<<< HEAD
 
         // Required — every invoice must be linked to a real appointment (no orphan invoices).
         [Required] public int AppointmentId { get; set; }
 
+=======
+        public int? AppointmentId { get; set; }
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
         [Required, Range(0, 1000000)] public decimal Amount { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Status { get; set; } = "Unpaid";
         public DateTime IssuedDate { get; set; } = DateTime.Today;
+<<<<<<< HEAD
         public DateTime DueDate { get; set; } = DateTime.Today.AddDays(7);
     }
 
@@ -31,5 +36,7 @@ namespace HealthcareCRM.API.Models.Dtos
     {
         public decimal? AmountPaid { get; set; }
         [StringLength(30)] public string PaymentMethod { get; set; } = "Cash";
+=======
+>>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
     }
 }
