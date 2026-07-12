@@ -94,31 +94,9 @@ namespace HealthcareCRM.API.Data
                 db.SaveChanges();
 
                 db.Invoices.AddRange(
-<<<<<<< HEAD
-                    new Invoice { PatientId = patients[2].Id, AppointmentId = appts[2].Id, Amount = 3500m, Description = "Consultation + medicines", Status = "Paid",   IssuedDate = DateTime.Today.AddDays(-3), DueDate = DateTime.Today.AddDays(4),  PaidAt = DateTime.Today.AddDays(-2) },
-                    new Invoice { PatientId = patients[0].Id, AppointmentId = appts[0].Id, Amount = 2000m, Description = "Consultation fee",          Status = "Unpaid", IssuedDate = DateTime.Today,             DueDate = DateTime.Today.AddDays(7) },
-                    new Invoice { PatientId = patients[1].Id, AppointmentId = appts[1].Id, Amount = 1500m, Description = "Lab tests",                  Status = "Unpaid", IssuedDate = DateTime.Today.AddDays(-10), DueDate = DateTime.Today.AddDays(-3) } // overdue, for testing the Overdue filter
-                );
-                db.SaveChanges();
-            }
-
-            // ---- Hospitals (sample data for the nearby-hospital distance API) ----
-            if (!db.Hospitals.Any())
-            {
-                db.Hospitals.AddRange(
-                    new Hospital { Name = "Lahore General Hospital",      Address = "Ferozepur Road, Lahore",         City = "Lahore",     PhoneNumber = "042-99230113", Latitude = 31.5204, Longitude = 74.3587 },
-                    new Hospital { Name = "Services Hospital Lahore",     Address = "Jail Road, Lahore",              City = "Lahore",     PhoneNumber = "042-99203402", Latitude = 31.5546, Longitude = 74.3221 },
-                    new Hospital { Name = "Shaukat Khanum Memorial",      Address = "Johar Town, Lahore",             City = "Lahore",     PhoneNumber = "042-35945100", Latitude = 31.4697, Longitude = 74.2728 },
-                    new Hospital { Name = "PIMS Hospital",                Address = "G-8/3, Islamabad",               City = "Islamabad",  PhoneNumber = "051-9261170",  Latitude = 33.7294, Longitude = 73.0931 },
-                    new Hospital { Name = "Shifa International Hospital", Address = "Sector H-8/4, Islamabad",        City = "Islamabad",  PhoneNumber = "051-8464646",  Latitude = 33.6789, Longitude = 73.0426 },
-                    new Hospital { Name = "Aga Khan University Hospital", Address = "Stadium Road, Karachi",          City = "Karachi",    PhoneNumber = "021-34930051", Latitude = 24.8929, Longitude = 67.0817 },
-                    new Hospital { Name = "Jinnah Postgraduate Medical Centre", Address = "Rafiqui Shaheed Road, Karachi", City = "Karachi", PhoneNumber = "021-99201300", Latitude = 24.8546, Longitude = 67.0298 },
-                    new Hospital { Name = "Nishtar Hospital",             Address = "Nishtar Road, Multan",           City = "Multan",     PhoneNumber = "061-9201133",  Latitude = 30.1798, Longitude = 71.4498 }
-=======
                     new Invoice { PatientId = patients[2].Id, AppointmentId = appts[2].Id, Amount = 3500m, Description = "Consultation + medicines", Status = "Paid",   IssuedDate = DateTime.Today.AddDays(-3) },
                     new Invoice { PatientId = patients[0].Id, Amount = 2000m, Description = "Consultation fee", Status = "Unpaid", IssuedDate = DateTime.Today },
                     new Invoice { PatientId = patients[1].Id, Amount = 1500m, Description = "Lab tests",        Status = "Unpaid", IssuedDate = DateTime.Today }
->>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
                 );
                 db.SaveChanges();
             }

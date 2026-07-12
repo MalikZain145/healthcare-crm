@@ -12,11 +12,6 @@ namespace HealthcareCRM.API.Data
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Appointment> Appointments => Set<Appointment>();
         public DbSet<Invoice> Invoices => Set<Invoice>();
-<<<<<<< HEAD
-        public DbSet<Payment> Payments => Set<Payment>();
-        public DbSet<Hospital> Hospitals => Set<Hospital>();
-=======
->>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -51,31 +46,11 @@ namespace HealthcareCRM.API.Data
                 .WithMany(p => p.Invoices)
                 .HasForeignKey(i => i.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
-<<<<<<< HEAD
-            // Required FK — every invoice must reference a real, existing appointment.
-            // Restrict delete so an appointment with invoices can't be deleted and leave an orphan.
-=======
->>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
             b.Entity<Invoice>()
                 .HasOne(i => i.Appointment)
                 .WithMany()
                 .HasForeignKey(i => i.AppointmentId)
-<<<<<<< HEAD
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            b.Entity<Payment>().ToTable("Payments");
-            b.Entity<Payment>().Property(p => p.AmountPaid).HasPrecision(18, 2);
-            b.Entity<Payment>()
-                .HasOne(p => p.Invoice)
-                .WithMany(i => i.Payments)
-                .HasForeignKey(p => p.InvoiceId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            b.Entity<Hospital>().ToTable("Hospitals");
-=======
                 .OnDelete(DeleteBehavior.SetNull);
->>>>>>> 5ad68447cafaeb1f8dd4a3710b689cbaf6afa0ca
         }
     }
 }
