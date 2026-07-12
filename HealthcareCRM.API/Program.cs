@@ -56,7 +56,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "HealthCare CRM API",
         Version = "v1",
-        Description = "RESTful API for Healthcare CRM system. Includes Appointments (with double-booking protection), Emergency location mock endpoints, Patients, Doctors, Billing, and Auth."
+        Description = "RESTful API for Healthcare CRM system. Includes Appointments (with double-booking protection), Emergency location mock endpoints, Patients, Doctors, Auth, Billing (invoice generation, mark-as-paid, Paid/Unpaid/Overdue filtering), and Hospitals (nearby-hospital distance sorting using real device coordinates)."
     });
 
     // Include XML comments for better Swagger documentation
