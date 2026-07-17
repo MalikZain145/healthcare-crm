@@ -1,0 +1,46 @@
+﻿@model List<HealthcareCRM.Web.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h2>Notifications</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No unread notifications.
+    </div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Message</td>
+                    <td>@item.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</td>
+                    <td>
+                        <form asp-action="MarkAsRead" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-success btn-sm">
+                                Mark as Read
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

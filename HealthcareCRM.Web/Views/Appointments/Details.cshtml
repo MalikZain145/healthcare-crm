@@ -1,0 +1,203 @@
+﻿@model HealthcareCRM.Web.Models.ViewModels.AppointmentDetailsViewModel
+
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Appointment Details</h2>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            ← Back
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Appointment Information</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <strong>Patient</strong><br />
+                    @Model.Appointment.Patient?.FullName
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Doctor</strong><br />
+                    @Model.Appointment.Doctor?.FullName
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Date</strong><br />
+                    @Model.Appointment.AppointmentDate.ToString("dd MMM yyyy")
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Time</strong><br />
+                    @Model.Appointment.AppointmentDate.ToString("hh:mm tt")
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Status</strong><br />
+                    @Model.Appointment.Status
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Reason</strong><br />
+                    @Model.Appointment.Reason
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Add Prescription</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-controller="Prescriptions"
+                  asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="AppointmentId"
+                       value="@Model.Appointment.Id" />
+
+                <div class="mb-3">
+                    <label class="form-label">Medicine Name</label>
+                    <input type="text"
+                           name="MedicineName"
+                           class="form-control"
+                           required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Dosage</label>
+                    <input type="text"
+                           name="Dosage"
+                           class="form-control"
+                           required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Duration</label>
+                    <input type="text"
+                           name="Duration"
+                           class="form-control"
+                           required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Instructions</label>
+                    <textarea name="Instructions"
+                              rows="4"
+                              class="form-control"></textarea>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Save Prescription
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mt-4">
+
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Prescription History</h5>
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.Prescriptions.Any())
+            {
+                <table class="table table-bordered table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Dosage</th>
+                            <th>Duration</th>
+                            <th>Instructions</th>
+                            <th>Date</th>
+                            <th width="120">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.Prescriptions)
+                        {
+                            <tr>
+
+                                <td>@item.MedicineName</td>
+                                <td>@item.Dosage</td>
+                                <td>@item.Duration</td>
+                                <td>@item.Instructions</td>
+                                <td>@item.CreatedAt.ToString("dd MMM yyyy")</td>
+
+                                <td>
+
+                                    <form asp-controller="Prescriptions"
+                                          asp-action="Delete"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@item.Id" />
+
+                                        <input type="hidden"
+                                               name="appointmentId"
+                                               value="@Model.Appointment.Id" />
+
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Delete this prescription?')">
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No prescriptions have been added yet.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -49,6 +49,40 @@ namespace HealthcareCRM.API.Controllers
         }
 
         /// <summary>
+        /// Get appointments that fall within the next 24 hours and are still Scheduled.
+        /// Used to power reminder notifications.
+        /// </summary>
+        [HttpGet("reminders")]
+        public async Task<IActionResult> GetReminders()
+        {
+            var now = DateTime.UtcNow;
+            var windowEnd = now.AddHours(24);
+
+            var list = await _db.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor)
+                .Where(a => a.Status == "Scheduled"
+                    && a.AppointmentDate >= now
+                    && a.AppointmentDate <= windowEnd)
+                .OrderBy(a => a.AppointmentDate)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.PatientId,
+                    PatientName = a.Patient!.FirstName + " " + a.Patient!.LastName,
+                    a.DoctorId,
+                    DoctorName = a.Doctor!.FullName,
+                    a.AppointmentDate,
+                    a.Reason,
+                    a.Status,
+                    HoursUntil = Math.Round((a.AppointmentDate - now).TotalHours, 1)
+                })
+                .ToListAsync();
+
+            return Ok(list);
+        }
+
+        /// <summary>
         /// Get a single appointment by ID.
         /// </summary>
         /// <param name="id">Appointment ID</param>

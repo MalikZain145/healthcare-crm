@@ -15,6 +15,12 @@ namespace HealthcareCRM.API.Data
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<Hospital> Hospitals => Set<Hospital>();
 
+        // ---- Week 6: Notifications & Reminders / Emergency Contacts - Prescriptions - SOS Alert Flow ----
+        public DbSet<Prescription> Prescriptions => Set<Prescription>();
+        public DbSet<Notification> Notifications => Set<Notification>();
+        public DbSet<EmergencyContact> EmergencyContacts => Set<EmergencyContact>();
+        public DbSet<EmergencyAlert> EmergencyAlerts => Set<EmergencyAlert>();
+
         protected override void OnModelCreating(ModelBuilder b)
         {
             b.Entity<User>().ToTable("Users");
@@ -66,6 +72,35 @@ namespace HealthcareCRM.API.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             b.Entity<Hospital>().ToTable("Hospitals");
+
+            // ---- Week 6 entities ----
+            b.Entity<Prescription>().ToTable("Prescriptions");
+            b.Entity<Prescription>()
+                .HasOne(p => p.Appointment)
+                .WithMany()
+                .HasForeignKey(p => p.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            b.Entity<Notification>().ToTable("Notifications");
+            b.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany()
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            b.Entity<EmergencyContact>().ToTable("EmergencyContacts");
+            b.Entity<EmergencyContact>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            b.Entity<EmergencyAlert>().ToTable("EmergencyAlerts");
+            b.Entity<EmergencyAlert>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

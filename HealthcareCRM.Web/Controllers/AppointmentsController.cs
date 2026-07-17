@@ -1,9 +1,10 @@
-using System.Security.Claims;
+using HealthcareCRM.Web.Models;
 using HealthcareCRM.Web.Models.ViewModels;
 using HealthcareCRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace HealthcareCRM.Web.Controllers
 {
@@ -13,12 +14,18 @@ namespace HealthcareCRM.Web.Controllers
         private readonly IAppointmentService _appointments;
         private readonly IPatientService _patients;
         private readonly IDoctorService _doctors;
+        private readonly IPrescriptionService _prescriptions;
 
-        public AppointmentsController(IAppointmentService appointments, IPatientService patients, IDoctorService doctors)
+        public AppointmentsController(
+     IAppointmentService appointments,
+     IPatientService patients,
+     IDoctorService doctors,
+     IPrescriptionService prescriptions)
         {
             _appointments = appointments;
             _patients = patients;
             _doctors = doctors;
+            _prescriptions = prescriptions;
         }
 
         private async Task<int?> CurrentDoctorIdAsync()
@@ -44,6 +51,29 @@ namespace HealthcareCRM.Web.Controllers
                 : (await CurrentDoctorIdAsync() ?? -1);
 
             return View(await _appointments.GetAllAsync(search, status, scope, date));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var appointment = await _appointments.GetByIdAsync(id);
+
+            if (appointment == null)
+                return NotFound();
+
+            if (User.IsInRole("Doctor") && appointment.DoctorId != await CurrentDoctorIdAsync())
+                return Forbid();
+
+            var model = new AppointmentDetailsViewModel
+            {
+                Appointment = appointment,
+                NewPrescription = new Prescription
+                {
+                    AppointmentId = appointment.Id
+                },
+                Prescriptions = await _prescriptions.GetByAppointmentAsync(appointment.Id)
+            };
+
+            return View(model);
         }
 
         [HttpGet]

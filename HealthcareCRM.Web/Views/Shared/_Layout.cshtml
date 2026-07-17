@@ -71,10 +71,19 @@
                 <button class="hamburger" type="button" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
                 <h1 class="topbar-title">@ViewData["Title"]</h1>
                 <div class="topbar-right">
+
+                    <a asp-controller="Notifications"
+                       asp-action="Index"
+                       class="btn btn-outline-primary me-2">
+                        🔔 Notifications
+                    </a>
+
                     <div class="avatar" title="@userName">@initials</div>
+
                     <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
                         <button type="submit" class="btn-logout">Sign out</button>
                     </form>
+
                 </div>
             </header>
 

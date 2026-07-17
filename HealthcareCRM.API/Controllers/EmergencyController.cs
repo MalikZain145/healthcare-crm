@@ -1,4 +1,7 @@
+using HealthcareCRM.API.Data;
+using HealthcareCRM.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HealthcareCRM.API.Controllers
 {
@@ -6,6 +9,9 @@ namespace HealthcareCRM.API.Controllers
     [Route("api/[controller]")]
     public class EmergencyController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public EmergencyController(AppDbContext db) => _db = db;
+
         // Mock location data for demonstration purposes
         private static readonly Dictionary<int, object> _mockLocations = new()
         {
@@ -85,6 +91,48 @@ namespace HealthcareCRM.API.Controllers
             }
 
             return NotFound(new { message = $"Emergency case with ID {id} not found." });
+        }
+
+        /// <summary>
+        /// Trigger an SOS alert for a user. Marks the request as SOS, records the alert timestamp,
+        /// and reports how many of the user's emergency contacts would be notified.
+        /// </summary>
+        /// <param name="id">User ID of the person triggering the SOS alert</param>
+        /// <response code="200">Alert created and recorded</response>
+        /// <response code="404">User not found</response>
+        [HttpPost("{id:int}/notify")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Notify(int id)
+        {
+            var userExists = await _db.Users.AnyAsync(u => u.Id == id);
+            if (!userExists)
+                return NotFound(new { message = $"User with ID {id} not found." });
+
+            var contactCount = await _db.EmergencyContacts.CountAsync(c => c.UserId == id);
+
+            var alert = new EmergencyAlert
+            {
+                UserId = id,
+                Status = "SOS",
+                TriggeredAt = DateTime.UtcNow,
+                ContactsNotified = contactCount
+            };
+
+            _db.EmergencyAlerts.Add(alert);
+            await _db.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = contactCount > 0
+                    ? $"SOS alert sent. {contactCount} emergency contact(s) notified."
+                    : "SOS alert recorded, but this user has no emergency contacts on file.",
+                alert.Id,
+                alert.UserId,
+                alert.Status,
+                alert.TriggeredAt,
+                alert.ContactsNotified
+            });
         }
     }
 }

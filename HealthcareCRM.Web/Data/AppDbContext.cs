@@ -11,7 +11,9 @@ namespace HealthcareCRM.Web.Data
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Appointment> Appointments => Set<Appointment>();
+        public DbSet<Prescription> Prescriptions => Set<Prescription>();
         public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<Notification> Notifications => Set<Notification>();
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -38,6 +40,13 @@ namespace HealthcareCRM.Web.Data
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
+            b.Entity<Prescription>().ToTable("Prescriptions");
+
+            b.Entity<Prescription>()
+                .HasOne(p => p.Appointment)
+                .WithMany(a => a.Prescriptions)
+                .HasForeignKey(p => p.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             b.Entity<Invoice>().ToTable("Invoices");
             b.Entity<Invoice>().Property(i => i.Amount).HasPrecision(18, 2);
@@ -51,6 +60,7 @@ namespace HealthcareCRM.Web.Data
                 .WithMany()
                 .HasForeignKey(i => i.AppointmentId)
                 .OnDelete(DeleteBehavior.SetNull);
+            b.Entity<Notification>().ToTable("Notifications");
         }
     }
 }

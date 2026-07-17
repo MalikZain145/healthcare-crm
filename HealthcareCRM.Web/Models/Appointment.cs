@@ -27,5 +27,6 @@ namespace HealthcareCRM.Web.Models
         public string? Notes { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
     }
 }

@@ -319,6 +319,30 @@
               ]
             }
           }
+        },
+        {
+          "name": "GET Appointment Reminders (next 24h) [Track A - Week 6]",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/reminders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "reminders"
+              ]
+            },
+            "description": "Week 6 feature: Returns Scheduled appointments happening within the next 24 hours, for reminder notifications."
+          }
         }
       ]
     },
@@ -370,6 +394,349 @@
                 "emergency",
                 "2",
                 "location"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Trigger SOS Alert [Track B - Week 6]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/emergency/1/notify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergency",
+                "1",
+                "notify"
+              ]
+            },
+            "description": "Triggers an SOS alert for the given user ID. Marks the request as SOS, records the alert timestamp, and returns how many emergency contacts were notified."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prescriptions [Track A - Week 6]",
+      "item": [
+        {
+          "name": "GET Prescriptions by Appointment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions?appointmentId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prescriptions"
+              ],
+              "query": [
+                {
+                  "key": "appointmentId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Returns all prescriptions for a given appointment."
+          }
+        },
+        {
+          "name": "GET Prescription by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prescriptions",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentId\": 1,\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"500mg\",\n  \"frequency\": \"Twice a day\",\n  \"duration\": \"7 days\",\n  \"instructions\": \"Take after meals\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prescriptions"
+              ]
+            },
+            "description": "Creates a new prescription linked to an existing appointment."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications [Track A - Week 6]",
+      "item": [
+        {
+          "name": "GET Unread Notifications by User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications?userId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Returns unread in-app notifications for a user (bell icon feed)."
+          }
+        },
+        {
+          "name": "GET Notification by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"title\": \"Appointment Reminder\",\n  \"message\": \"You have an appointment tomorrow at 10:00 AM.\",\n  \"type\": \"Reminder\",\n  \"relatedEntityId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
+            },
+            "description": "Creates a new in-app notification for a user."
+          }
+        },
+        {
+          "name": "PATCH Mark Notification as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/1/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "1",
+                "read"
+              ]
+            },
+            "description": "Marks a specific notification as read."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Emergency Contacts [Track B - Week 6]",
+      "item": [
+        {
+          "name": "GET Emergency Contacts by User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencycontacts?userId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencycontacts"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Emergency Contact by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencycontacts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencycontacts",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Add Emergency Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"contactName\": \"Bilal Raza\",\n  \"phoneNumber\": \"0300-1234567\",\n  \"relationship\": \"Brother\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencycontacts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencycontacts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Emergency Contact",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencycontacts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencycontacts",
+                "1"
               ]
             }
           }
