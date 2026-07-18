@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-C
 	ProjectSection(SolutionItems) = preProject
 		docs\AppointmentTestCases_Week4.md = docs\AppointmentTestCases_Week4.md
 		docs\AuthTestCases.md = docs\AuthTestCases.md
+		docs\BillingTestCases_Week5.md = docs\BillingTestCases_Week5.md
 		docs\PatientTestCases.md = docs\PatientTestCases.md
 		docs\SecurityTestCases.md = docs\SecurityTestCases.md
 		docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx = docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx
