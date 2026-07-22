@@ -1,5 +1,6 @@
 using HealthcareCRM.API.Data;
 using HealthcareCRM.API.Models;
+using HealthcareCRM.API.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -132,6 +133,80 @@ namespace HealthcareCRM.API.Controllers
                 alert.Status,
                 alert.TriggeredAt,
                 alert.ContactsNotified
+            });
+        }
+
+        /// <summary>
+        /// Track B — Push Notification Trigger. Updates the status of an existing emergency
+        /// alert (e.g. SOS -> Dispatched -> Resolved). Whenever the status actually changes,
+        /// an in-app push notification (bell icon) is automatically created for the affected
+        /// user so they see the update in real time.
+        /// </summary>
+        /// <param name="alertId">ID of the emergency alert to update</param>
+        /// <param name="dto">The new status: SOS, Dispatched, or Resolved</param>
+        /// <response code="200">Status updated (and notification triggered if it changed)</response>
+        /// <response code="400">Invalid or missing status value</response>
+        /// <response code="404">Emergency alert not found</response>
+        [HttpPatch("alerts/{alertId:int}/status")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAlertStatus(int alertId, [FromBody] EmergencyStatusUpdateDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var allowedStatuses = new[] { "SOS", "Dispatched", "Resolved" };
+            if (!allowedStatuses.Contains(dto.Status, StringComparer.OrdinalIgnoreCase))
+            {
+                return BadRequest(new
+                {
+                    message = $"Status must be one of: {string.Join(", ", allowedStatuses)}"
+                });
+            }
+
+            var alert = await _db.EmergencyAlerts.FindAsync(alertId);
+            if (alert == null)
+                return NotFound(new { message = $"Emergency alert with ID {alertId} not found." });
+
+            var previousStatus = alert.Status;
+            var statusChanged = !string.Equals(previousStatus, dto.Status, StringComparison.OrdinalIgnoreCase);
+
+            alert.Status = dto.Status;
+            if (string.Equals(dto.Status, "Resolved", StringComparison.OrdinalIgnoreCase) && alert.ResolvedAt == null)
+                alert.ResolvedAt = DateTime.UtcNow;
+
+            Notification? notification = null;
+
+            // ---- Push Notification Trigger ----
+            // Only fire when the status genuinely changed, so repeated calls with the
+            // same status don't spam the user with duplicate notifications.
+            if (statusChanged)
+            {
+                notification = new Notification
+                {
+                    UserId = alert.UserId,
+                    Title = "Emergency Status Update",
+                    Message = $"Your emergency alert status changed from '{previousStatus}' to '{dto.Status}'.",
+                    Type = "Emergency",
+                    RelatedEntityId = alert.Id
+                };
+                _db.Notifications.Add(notification);
+            }
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = statusChanged
+                    ? $"Status updated to '{alert.Status}'. Push notification triggered for the user."
+                    : $"Status is already '{alert.Status}'. No notification triggered.",
+                alert.Id,
+                alert.UserId,
+                previousStatus,
+                currentStatus = alert.Status,
+                alert.ResolvedAt,
+                notificationTriggered = statusChanged,
+                notificationId = notification?.Id
             });
         }
     }

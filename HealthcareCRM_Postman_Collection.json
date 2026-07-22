@@ -430,6 +430,40 @@
             },
             "description": "Triggers an SOS alert for the given user ID. Marks the request as SOS, records the alert timestamp, and returns how many emergency contacts were notified."
           }
+        },
+        {
+          "name": "PATCH Update Emergency Alert Status (Push Notification Trigger) [Track B - Week 7]",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Dispatched\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/emergency/alerts/1/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergency",
+                "alerts",
+                "1",
+                "status"
+              ]
+            },
+            "description": "Updates the status of an emergency alert (SOS -> Dispatched -> Resolved). When the status actually changes, an in-app push notification is automatically created for the affected user (visible via GET /api/notifications?userId={id}). Use an alertId returned from POST /api/emergency/{id}/notify."
+          }
         }
       ]
     },
@@ -1150,6 +1184,83 @@
                 "nearby"
               ]
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics [Track A/B - Week 7]",
+      "item": [
+        {
+          "name": "GET Patient Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "patients"
+              ]
+            },
+            "description": "Returns total patients, new patients registered this calendar month, and a gender breakdown."
+          }
+        },
+        {
+          "name": "GET Appointment Analytics (Last 30 Days)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "appointments"
+              ]
+            },
+            "description": "Returns daily appointment counts for the last 30 days (including today). Days with 0 appointments are included."
+          }
+        },
+        {
+          "name": "GET Doctor Analytics (Current Month)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/doctors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "doctors"
+              ]
+            },
+            "description": "Returns the number of appointments handled by each doctor within the current calendar month, sorted highest first."
           }
         }
       ]
