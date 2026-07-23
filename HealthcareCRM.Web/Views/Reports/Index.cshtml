@@ -140,13 +140,7 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
     <script>
-        // ---------------------------------------------------------------
-        // Analytics charts. Each loader currently returns dummy/mock data
-        // shaped exactly like the future API response, so the only change
-        // needed once the backend is ready is inside the loadXxx() function
-        // (swap the mock object for a real fetch() call to the endpoint
-        // noted above each one). UI/rendering code will not need to change.
-        // ---------------------------------------------------------------
+        const ANALYTICS_API_BASE = 'http://localhost:5090';
 
         const chartColors = {
         teal: '#14a8a0',
@@ -166,29 +160,36 @@
         document.getElementById('analyticsError').style.display = 'block';
         }
 
-        // TODO: replace with -> fetch('/api/analytics/patients').then(r => r.json())
         async function loadPatientsByGender() {
-        return { labels: ['Male', 'Female', 'Other'], values: [42, 51, 3] };
-        }
-
-        // TODO: replace with -> fetch('/api/analytics/appointments').then(r => r.json())
-        async function loadAppointmentsLast30Days() {
-        const labels = [];
-        const values = [];
-        for (let i = 29; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        labels.push(d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
-        values.push(Math.floor(Math.random() * 10) + 1);
-        }
-        return { labels, values };
-        }
-
-        // TODO: replace with -> fetch('/api/analytics/doctors').then(r => r.json())
-        async function loadAppointmentsPerDoctor() {
+        const res = await fetch(`${ANALYTICS_API_BASE}/api/analytics/patients`);
+        if (!res.ok) throw new Error('Failed to load patient analytics');
+        const data = await res.json();
         return {
-        labels: ['Dr. Ahmed', 'Dr. Fatima', 'Dr. Khan', 'Dr. Raza'],
-        values: [18, 24, 11, 9]
+        labels: data.genderBreakdown.map(g => g.gender),
+        values: data.genderBreakdown.map(g => g.count)
+        };
+        }
+
+        async function loadAppointmentsLast30Days() {
+        const res = await fetch(`${ANALYTICS_API_BASE}/api/analytics/appointments`);
+        if (!res.ok) throw new Error('Failed to load appointment analytics');
+        const data = await res.json();
+        return {
+        labels: data.dailyCounts.map(d => {
+        const dt = new Date(d.date);
+        return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+        }),
+        values: data.dailyCounts.map(d => d.count)
+        };
+        }
+
+        async function loadAppointmentsPerDoctor() {
+        const res = await fetch(`${ANALYTICS_API_BASE}/api/analytics/doctors`);
+        if (!res.ok) throw new Error('Failed to load doctor analytics');
+        const data = await res.json();
+        return {
+        labels: data.doctors.map(d => d.doctorName),
+        values: data.doctors.map(d => d.appointmentCount)
         };
         }
 
