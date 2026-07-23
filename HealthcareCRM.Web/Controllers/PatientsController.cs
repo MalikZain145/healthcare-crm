@@ -3,6 +3,7 @@ using HealthcareCRM.Web.Models.ViewModels;
 using HealthcareCRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using HealthcareCRM.Web.Models;
 
 namespace HealthcareCRM.Web.Controllers
 {
@@ -29,9 +30,17 @@ namespace HealthcareCRM.Web.Controllers
         public async Task<IActionResult> Index(string? search)
         {
             ViewBag.Search = search;
-            // Admin sees all; a doctor sees only their own patients.
-            int? scope = User.IsInRole("Admin") ? null : (await CurrentDoctorIdAsync() ?? -1);
-            return View(await _patients.GetAllAsync(search, scope));
+            try
+            {
+                // Admin sees all; a doctor sees only their own patients.
+                int? scope = User.IsInRole("Admin") ? null : (await CurrentDoctorIdAsync() ?? -1);
+                return View(await _patients.GetAllAsync(search, scope));
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                return View(new List<Patient>());
+            }
         }
 
         [HttpGet]

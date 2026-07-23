@@ -2,6 +2,7 @@ using HealthcareCRM.Web.Models.ViewModels;
 using HealthcareCRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using HealthcareCRM.Web.Models;
 
 namespace HealthcareCRM.Web.Controllers
 {
@@ -14,7 +15,15 @@ namespace HealthcareCRM.Web.Controllers
         public async Task<IActionResult> Index(string? search)
         {
             ViewBag.Search = search;
-            return View(await _doctors.GetAllAsync(search));
+            try
+            {
+                return View(await _doctors.GetAllAsync(search));
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                return View(new List<Doctor>());
+            }
         }
 
         [HttpGet]

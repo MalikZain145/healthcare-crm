@@ -3,6 +3,7 @@ using HealthcareCRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using HealthcareCRM.Web.Models;
 
 namespace HealthcareCRM.Web.Controllers
 {
@@ -22,7 +23,15 @@ namespace HealthcareCRM.Web.Controllers
         {
             ViewBag.Search = search;
             ViewBag.Status = status;
-            return View(await _billing.GetAllAsync(search, status));
+            try
+            {
+                return View(await _billing.GetAllAsync(search, status));
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                return View(new List<Invoice>());
+            }
         }
 
         [HttpGet]

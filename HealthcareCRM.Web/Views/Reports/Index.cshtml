@@ -19,6 +19,11 @@
     </div>
 </div>
 
+@if (ViewBag.LoadError == true)
+{
+    <div class="alert-box error">Could not load report data. Please try again later.</div>
+}
+
 <div class="stat-grid">
     <div class="stat-card">
         <div class="stat-ico teal">☺</div>
@@ -96,3 +101,173 @@
         </div>
     </div>
 </div>
+
+<div class="page-head" style="margin-top:32px;">
+    <div>
+        <h2 style="font-size:19px;">Analytics</h2>
+        <div class="sub">Live charts from the analytics API</div>
+    </div>
+</div>
+
+<div id="analyticsError" class="alert-box error" style="display:none;">
+    Could not load analytics data. Please try again later.
+</div>
+
+<div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+    <div class="panel">
+        <div class="panel-head">Patients by gender</div>
+        <div class="panel-body" style="padding:18px 22px;">
+            <div id="patientsChartLoading" class="chart-loading">Loading…</div>
+            <canvas id="patientsChart" height="220" style="display:none;"></canvas>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-head">Appointments — last 30 days</div>
+        <div class="panel-body" style="padding:18px 22px;">
+            <div id="appointmentsChartLoading" class="chart-loading">Loading…</div>
+            <canvas id="appointmentsChart" height="220" style="display:none;"></canvas>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-head">Appointments per doctor — this month</div>
+        <div class="panel-body" style="padding:18px 22px;">
+            <div id="doctorsChartLoading" class="chart-loading">Loading…</div>
+            <canvas id="doctorsChart" height="220" style="display:none;"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+    <script>
+        // ---------------------------------------------------------------
+        // Analytics charts. Each loader currently returns dummy/mock data
+        // shaped exactly like the future API response, so the only change
+        // needed once the backend is ready is inside the loadXxx() function
+        // (swap the mock object for a real fetch() call to the endpoint
+        // noted above each one). UI/rendering code will not need to change.
+        // ---------------------------------------------------------------
+
+        const chartColors = {
+        teal: '#14a8a0',
+        navy: '#134063',
+        green: '#1c9e6b',
+        amber: '#b8860b',
+        red: '#d2493f',
+        blue: '#3d7cc9'
+        };
+
+        function showChart(canvasId, loadingId) {
+        document.getElementById(loadingId).style.display = 'none';
+        document.getElementById(canvasId).style.display = 'block';
+        }
+
+        function showAnalyticsError() {
+        document.getElementById('analyticsError').style.display = 'block';
+        }
+
+        // TODO: replace with -> fetch('/api/analytics/patients').then(r => r.json())
+        async function loadPatientsByGender() {
+        return { labels: ['Male', 'Female', 'Other'], values: [42, 51, 3] };
+        }
+
+        // TODO: replace with -> fetch('/api/analytics/appointments').then(r => r.json())
+        async function loadAppointmentsLast30Days() {
+        const labels = [];
+        const values = [];
+        for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        labels.push(d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
+        values.push(Math.floor(Math.random() * 10) + 1);
+        }
+        return { labels, values };
+        }
+
+        // TODO: replace with -> fetch('/api/analytics/doctors').then(r => r.json())
+        async function loadAppointmentsPerDoctor() {
+        return {
+        labels: ['Dr. Ahmed', 'Dr. Fatima', 'Dr. Khan', 'Dr. Raza'],
+        values: [18, 24, 11, 9]
+        };
+        }
+
+        async function initPatientsChart() {
+        try {
+        const data = await loadPatientsByGender();
+        showChart('patientsChart', 'patientsChartLoading');
+        new Chart(document.getElementById('patientsChart'), {
+        type: 'bar',
+        data: {
+        labels: data.labels,
+        datasets: [{
+        label: 'Patients',
+        data: data.values,
+        backgroundColor: [chartColors.teal, chartColors.navy, chartColors.amber]
+        }]
+        },
+        options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+        });
+        } catch (err) {
+        showAnalyticsError();
+        }
+        }
+
+        async function initAppointmentsChart() {
+        try {
+        const data = await loadAppointmentsLast30Days();
+        showChart('appointmentsChart', 'appointmentsChartLoading');
+        new Chart(document.getElementById('appointmentsChart'), {
+        type: 'line',
+        data: {
+        labels: data.labels,
+        datasets: [{
+        label: 'Appointments',
+        data: data.values,
+        borderColor: chartColors.teal,
+        backgroundColor: 'rgba(20,168,160,0.12)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 2
+        }]
+        },
+        options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { ticks: { maxTicksLimit: 8 } } }
+        }
+        });
+        } catch (err) {
+        showAnalyticsError();
+        }
+        }
+
+        async function initDoctorsChart() {
+        try {
+        const data = await loadAppointmentsPerDoctor();
+        showChart('doctorsChart', 'doctorsChartLoading');
+        new Chart(document.getElementById('doctorsChart'), {
+        type: 'pie',
+        data: {
+        labels: data.labels,
+        datasets: [{
+        data: data.values,
+        backgroundColor: [chartColors.teal, chartColors.navy, chartColors.amber, chartColors.blue]
+        }]
+        },
+        options: {
+        plugins: { legend: { position: 'bottom' } }
+        }
+        });
+        } catch (err) {
+        showAnalyticsError();
+        }
+        }
+
+        initPatientsChart();
+        initAppointmentsChart();
+        initDoctorsChart();
+    </script>
+}

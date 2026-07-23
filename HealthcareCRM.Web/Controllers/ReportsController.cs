@@ -1,3 +1,4 @@
+using HealthcareCRM.Web.Models.ViewModels;
 using HealthcareCRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,18 +21,26 @@ namespace HealthcareCRM.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var stats = await _dashboard.GetStatsAsync();
+            try
+            {
+                var stats = await _dashboard.GetStatsAsync();
 
-            var allAppts = await _appointments.GetAllAsync();
-            ViewBag.Scheduled = allAppts.Count(a => a.Status == "Scheduled");
-            ViewBag.Completed = allAppts.Count(a => a.Status == "Completed");
-            ViewBag.Cancelled = allAppts.Count(a => a.Status == "Cancelled");
+                var allAppts = await _appointments.GetAllAsync();
+                ViewBag.Scheduled = allAppts.Count(a => a.Status == "Scheduled");
+                ViewBag.Completed = allAppts.Count(a => a.Status == "Completed");
+                ViewBag.Cancelled = allAppts.Count(a => a.Status == "Cancelled");
 
-            var allInvoices = await _billing.GetAllAsync();
-            ViewBag.PaidCount = allInvoices.Count(i => i.Status == "Paid");
-            ViewBag.UnpaidCount = allInvoices.Count(i => i.Status == "Unpaid");
+                var allInvoices = await _billing.GetAllAsync();
+                ViewBag.PaidCount = allInvoices.Count(i => i.Status == "Paid");
+                ViewBag.UnpaidCount = allInvoices.Count(i => i.Status == "Unpaid");
 
-            return View(stats);
+                return View(stats);
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                return View(new DashboardViewModel());
+            }
         }
     }
 }

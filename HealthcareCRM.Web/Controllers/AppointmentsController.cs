@@ -42,15 +42,24 @@ namespace HealthcareCRM.Web.Controllers
             ViewBag.FilterDate = date;
             ViewBag.FilterDoctorId = filterDoctorId;
 
-            var doctors = await _doctors.GetActiveAsync();
-            ViewBag.DoctorFilterList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(
-                doctors.Select(d => new { d.Id, Name = d.FullName }), "Id", "Name");
+            try
+            {
+                var doctors = await _doctors.GetActiveAsync();
+                ViewBag.DoctorFilterList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(
+                    doctors.Select(d => new { d.Id, Name = d.FullName }), "Id", "Name");
 
-            int? scope = User.IsInRole("Admin")
-                ? filterDoctorId
-                : (await CurrentDoctorIdAsync() ?? -1);
+                int? scope = User.IsInRole("Admin")
+                    ? filterDoctorId
+                    : (await CurrentDoctorIdAsync() ?? -1);
 
-            return View(await _appointments.GetAllAsync(search, status, scope, date));
+                return View(await _appointments.GetAllAsync(search, status, scope, date));
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                ViewBag.DoctorFilterList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<object>(), "Id", "Name");
+                return View(new List<Appointment>());
+            }
         }
         [HttpGet]
         public async Task<IActionResult> Details(int id)

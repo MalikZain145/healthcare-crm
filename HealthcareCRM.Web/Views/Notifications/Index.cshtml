@@ -1,46 +1,74 @@
 ﻿@model List<HealthcareCRM.Web.Models.Notification>
-
 @{
     ViewData["Title"] = "Notifications";
 }
 
-<h2>Notifications</h2>
+<div id="loadingSpinner" class="page-loading">
+    <div class="spinner"></div>
+    <p>Loading notifications...</p>
+</div>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        No unread notifications.
+<div id="notificationContent" style="display:none;">
+
+    @if (ViewBag.LoadError == true)
+    {
+        <div class="alert-box error">Could not load notifications. Please try again later.</div>
+    }
+
+    <div class="page-head">
+        <div>
+            <h2>Notifications</h2>
+            <div class="sub">@Model.Count unread notification(s)</div>
+        </div>
     </div>
-}
-else
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Message</th>
-                <th>Date</th>
-                <th></th>
-            </tr>
-        </thead>
 
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    <td>@item.Message</td>
-                    <td>@item.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</td>
-                    <td>
-                        <form asp-action="MarkAsRead" method="post">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-success btn-sm">
-                                Mark as Read
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    <div class="table-card">
+        @if (Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="cell-strong">@item.Title</td>
+                            <td>@item.Message</td>
+                            <td>@item.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</td>
+                            <td style="text-align:right;">
+                                <form asp-action="MarkAsRead" method="post">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-success btn-sm">Mark as Read</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-ico">🔔</div>
+                <h4>No unread notifications</h4>
+                <p>You're all caught up.</p>
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('notificationContent').style.display = 'block';
+        }, 400);
+    });
+</script>

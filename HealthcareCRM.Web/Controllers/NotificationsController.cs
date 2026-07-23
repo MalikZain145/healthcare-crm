@@ -1,6 +1,7 @@
 ﻿using HealthcareCRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using HealthcareCRM.Web.Models;
 
 namespace HealthcareCRM.Web.Controllers
 {
@@ -19,9 +20,16 @@ namespace HealthcareCRM.Web.Controllers
             // Temporary user id
             int userId = 1;
 
-            var notifications = await _notificationService.GetUnreadAsync(userId);
-
-            return View(notifications);
+            try
+            {
+                var notifications = await _notificationService.GetUnreadAsync(userId);
+                return View(notifications);
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                return View(new List<Notification>());
+            }
         }
 
         [HttpPost]

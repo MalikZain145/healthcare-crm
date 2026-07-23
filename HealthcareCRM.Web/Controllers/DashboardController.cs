@@ -22,16 +22,24 @@ namespace HealthcareCRM.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (User.IsInRole("Admin"))
-                return View(await _dashboard.GetStatsAsync());
+            try
+            {
+                if (User.IsInRole("Admin"))
+                    return View(await _dashboard.GetStatsAsync());
 
-            // Doctor: scoped to their own patients & appointments.
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            var doc = string.IsNullOrEmpty(email) ? null : await _doctors.GetByEmailAsync(email);
-            var model = doc == null
-                ? new DashboardViewModel()
-                : await _dashboard.GetStatsForDoctorAsync(doc.Id);
-            return View(model);
+                // Doctor: scoped to their own patients & appointments.
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                var doc = string.IsNullOrEmpty(email) ? null : await _doctors.GetByEmailAsync(email);
+                var model = doc == null
+                    ? new DashboardViewModel()
+                    : await _dashboard.GetStatsForDoctorAsync(doc.Id);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                ViewBag.LoadError = true;
+                return View(new DashboardViewModel());
+            }
         }
 
         [AllowAnonymous]

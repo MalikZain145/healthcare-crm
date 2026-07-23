@@ -6,8 +6,15 @@
     string Badge(string st) => st == "Completed" ? "b-green" : st == "Cancelled" ? "b-red" : "b-blue";
 }
 
-@if (p == null)
-{
+<div id="loadingSpinner" class="page-loading">
+    <div class="spinner"></div>
+    <p>Loading dashboard...</p>
+</div>
+
+<div id="portalContent" style="display:none;">
+
+    @if (p == null)
+    {
     <div class="empty-state">
         <div class="empty-ico">☺</div>
         <h4>Welcome!</h4>
@@ -110,3 +117,13 @@ else
         </div>
     </div>
 }
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('portalContent').style.display = 'block';
+        }, 400);
+    });
+</script>
