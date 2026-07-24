@@ -8,6 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthcareCRM.API", "Health
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-CBA4-4BD7-BDA2-03AB5EADE7D5}"
 	ProjectSection(SolutionItems) = preProject
+		docs\AnalyticsTestCases_Week7.md = docs\AnalyticsTestCases_Week7.md
 		docs\AppointmentTestCases_Week4.md = docs\AppointmentTestCases_Week4.md
 		docs\AuthTestCases.md = docs\AuthTestCases.md
 		docs\BillingTestCases_Week5.md = docs\BillingTestCases_Week5.md
@@ -15,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5BE9D0FD-C
 		docs\SecurityTestCases.md = docs\SecurityTestCases.md
 		docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx = docs\Week4_Wireframes_CalendarViewAndAppointmentDetail.docx
 		docs\Week5_Wireframes_BillingDashboardAndInvoiceDetail.docx = docs\Week5_Wireframes_BillingDashboardAndInvoiceDetail.docx
-		docs\Week6_Prescription_Notification_TestCases.docx = docs\Week6_Prescription_Notification_TestCases.docx
+		docs\Week6_Prescription_Notification_TestCases.md = docs\Week6_Prescription_Notification_TestCases.md
 		docs\Wireframes_PatientProfileAndMedicalHistory.docx = docs\Wireframes_PatientProfileAndMedicalHistory.docx
 		docs\Wireframes_RegisterAndRoleManagement.docx = docs\Wireframes_RegisterAndRoleManagement.docx
 	EndProjectSection
